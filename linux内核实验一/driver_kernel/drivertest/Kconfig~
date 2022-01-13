@@ -1,0 +1,28 @@
+#
+# DRIVER test subsystem configuration
+#
+menu "DRIVER  KMALLOC support" 
+	config DRIVER_VMALLOC
+	tristate "Driver_test is supported" 
+	---help--- 
+	Driver_test use vmalloc . 
+
+endmenu 
+
+
+
+
+#menuconfig DRIVER_KMALLOC
+#	tristate "DRIVER  KMALLOC support"
+#	depends on HAS_IOMEM
+
+
+
+#config VMALLOC_TEST
+#	boolean
+#	default y
+
+
+
+
+

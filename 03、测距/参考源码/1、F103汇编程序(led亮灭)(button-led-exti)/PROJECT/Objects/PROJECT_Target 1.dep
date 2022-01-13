@@ -1,0 +1,2 @@
+Dependencies for Project 'PROJECT', Target 'Target 1': (DO NOT MODIFY !)
+F (..\START\startup_stm32f10x_md.s)(0x6193B320)(--cpu Cortex-M3 -g --apcs=interwork -I.\RTE\_Target_1-I"D:\arm os\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Include"-I"D:\arm os\ARM\CMSIS\Include"--pd "__UVISION_VERSION SETA 525" --pd "STM32F10X_MD SETA 1"--list .\listings\startup_stm32f10x_md.lst --xref -o .\objects\startup_stm32f10x_md.o --depend .\objects\startup_stm32f10x_md.d)

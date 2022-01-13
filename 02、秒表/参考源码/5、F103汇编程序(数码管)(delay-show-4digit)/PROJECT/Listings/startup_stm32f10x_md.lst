@@ -1,0 +1,963 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000         ; 本项目实现数码管显示, 接线方法：
+    2 00000000         ; 把数码管的引脚a~g和dp连接到PA0~7，数码�
+                       �的引脚1~4连至PA8~11
+    3 00000000         
+    4 00000000 40010800 
+                       GPIOA_BASE
+                               EQU              0X40010800  ;GPIOA基地址
+    5 00000000 40010800 
+                       GPIOA_CRL
+                               EQU              GPIOA_BASE  ;低配置寄存器
+                                                            
+    6 00000000 40010804 
+                       GPIOA_CRH
+                               EQU              GPIOA_BASE+4 
+                                                            ;高配置寄存器
+                                                            
+    7 00000000 4001080C 
+                       GPIOA_ODR
+                               EQU              GPIOA_BASE+0XC ;输出，偏移
+                                                            地址0Ch
+    8 00000000 40010810 
+                       GPIOA_BSRR
+                               EQU              GPIOA_BASE+0X10 ;低置位，�
+                                                            �清除偏移地址
+                                                            10h
+    9 00000000 40010814 
+                       GPIOA_BRR
+                               EQU              GPIOA_BASE+0X14 ;清除，偏�
+                                                            �地址14h
+   10 00000000         
+   11 00000000 33333333 
+                       CFGAL   EQU              0x33333333  ;PA0~7：  推挽�
+                                                            �出，50MHz
+   12 00000000 00003333 
+                       CFGAH   EQU              0x00003333  ;PA8~11： 推挽�
+                                                            �出，50MHz
+   13 00000000         
+   14 00000000 40000000 
+                       TIM2    EQU              0X40000000  ;TIM2基地址
+   15 00000000 4000002C 
+                       TIM2_ARR
+                               EQU              TIM2+0X2C   ;自动装载寄存
+                                                            器
+   16 00000000 40000028 
+                       TIM2_PSC
+                               EQU              TIM2+0X28   ;预分频器
+   17 00000000 4000000C 
+                       TIM2_DIER
+                               EQU              TIM2+0X0C   ;DMA/中断使能�
+                                                            �存器
+   18 00000000 40000000 
+                       TIM2_CR1
+                               EQU              TIM2+0X00   ;控制寄存器1
+   19 00000000 40000010 
+                       TIM2_SR EQU              TIM2+0X10   ;状态寄存器
+   20 00000000         
+   21 00000000 40021018 
+                       RCC_APB2ENR
+                               EQU              0X40021018
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+   22 00000000 00000004 
+                       GIOPAEN EQU              0X00000004  ;GPIOA使能位
+   23 00000000         ;GIOPBEN     EQU 0X00000008  ;GPIOB使能位
+   24 00000000         ;GIOPALLEN   EQU GIOPAEN :OR: GIOPBEN
+   25 00000000         
+   26 00000000 40021000 
+                       RCC_BASE
+                               EQU              0x40021000
+   27 00000000 40021000 
+                       RCC_CR  EQU              RCC_BASE+0x00
+   28 00000000 40021004 
+                       RCC_CFGR
+                               EQU              RCC_BASE+0x04
+   29 00000000 40021008 
+                       RCC_CIR EQU              RCC_BASE+0x08
+   30 00000000 00020000 
+                       RCC_CR_HSERDY
+                               EQU              0x00020000
+   31 00000000         
+   32 00000000 4002101C 
+                       RCC_APB1ENR
+                               EQU              0X4002101C
+   33 00000000 00000001 
+                       TIM2EN  EQU              0X00000001  ;TIM2使能位
+   34 00000000         
+   35 00000000 E000E100 
+                       ISER_TIM2
+                               EQU              0xe000e100  ;
+   36 00000000 10000000 
+                       TIM2_ITEN
+                               EQU              0x10000000
+   37 00000000         
+   38 00000000 20002000 
+                       STACK_TOP
+                               EQU              0X20002000
+   39 00000000         
+   40 00000000                 AREA             MYDATA,DATA,READONLY ; AREA不�
+                                                            ��顶格写
+   41 00000000 3F 06 5B 
+              4F 66 6D 
+              7D 07 7F 
+              6F 00 00 CODES   DCB              0x3f,0x06,0x5b,0x4f,0x66,0x6d,0
+x7d,0x07,0x7f,0x6f,0x00,0x00 
+                                                            ; 数码管0~9的�
+                                                            �模
+   42 0000000C 07 0B 0D 
+              0E       DIGITPOS
+                               DCB              0x07,0x0b,0x0d,0x0e ; 定位要
+                                                            显示的数字：�
+                                                            ��0~3位为数码�
+                                                            �4个数字的控�
+                                                            �信号，为0则�
+                                                            �示，否则不显
+                                                            示
+   43 00000010         
+   44 00000010                 AREA             MYDATA2,DATA,READWRITE ; AREA�
+                                                            �能顶格写(RAM,�
+                                                            ��动初始化为0)
+                                                            
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   45 00000000 00 00 00 
+              00       DIGITS  DCB              0x00,0x00,0x00,0x00 ; 正在显
+                                                            示的4个数字，
+                                                            取值0~9
+   46 00000004 00      CURSELECT
+                               DCB              0x00        ; 当前显示哪�
+                                                            �数字，取值0~3
+                                                            
+   47 00000005         
+   48 00000005                 AREA             RESET,CODE,READONLY ; AREA不�
+                                                            �顶格写
+   49 00000000 20002000        DCD              STACK_TOP   ; MSP主堆栈指�
+                                                            �
+   50 00000004 00000000        DCD              START       ; 复位，PC初始
+                                                            值
+   51 00000008 00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00 
+              00 00 00         SPACE            0xB0-8      ;
+   52 000000B0 00000000        DCD              TIM2_IRQHandler ; TIM2 
+   53 000000B4                 ENTRY                        ; 指示开始执�
+                                                            �,有了C文件，E
+                                                            NTRY注释掉
+   54 000000B4         START                                ; 所有的标号�
+                                                            �须顶格写，且
+                                                            无冒号
+   55 000000B4 F7FF FFFE       BL               InitRamArea
+   56 000000B8 F000 F87D       BL               RCC_CONFIG_72MHZ
+   57 000000BC         
+   58 000000BC         ; 配置RCC的APB1使能寄存器，启动TIM2时钟
+   59 000000BC 495F            LDR              R1, =RCC_APB1ENR
+   60 000000BE         ;LDR    R0, [R1]
+   61 000000BE F04F 0201       LDR              R2, =TIM2EN
+   62 000000C2         ;ORR    R0, R2
+   63 000000C2 600A            STR              R2, [R1]
+   64 000000C4         
+   65 000000C4         ; 配置RCC的APB2使能寄存器，启动GPIOA
+   66 000000C4 495E            LDR              R1, =RCC_APB2ENR
+   67 000000C6 6808            LDR              R0, [R1]
+   68 000000C8 F04F 0204       LDR              R2, =GIOPAEN
+   69 000000CC EA40 0002       ORR              R0, R2
+   70 000000D0 6008            STR              R0, [R1]    ; 使能GPIOA,GPIOB
+                                                            
+   71 000000D2         
+   72 000000D2         ; 配置GPIO配置寄存器，设置GPIOA.2 PA0~PA11为�
+                       ��挽输出和50MHz
+   73 000000D2 F04F 3033       MOV              R0, #CFGAL
+   74 000000D6 495B            LDR              R1, =GPIOA_CRL
+   75 000000D8 6008            STR              R0, [R1]
+   76 000000DA F243 3033       MOV              R0, #CFGAH
+   77 000000DE 495A            LDR              R1, =GPIOA_CRH
+   78 000000E0 6008            STR              R0, [R1]
+   79 000000E2         
+   80 000000E2         ; 设置定时器Tim2的重装载寄存器
+   81 000000E2 F242 700F       MOV              R0, #(10000-1)
+   82 000000E6 4959            LDR              R1, =TIM2_ARR
+   83 000000E8 6008            STR              R0, [R1]
+   84 000000EA         
+   85 000000EA         ; 设置定时器Tim2的分频器
+   86 000000EA F641 401F       MOV              R0, #(7200-1)
+   87 000000EE 4958            LDR              R1, =TIM2_PSC
+   88 000000F0 6008            STR              R0, [R1]
+   89 000000F2         
+   90 000000F2         ; 设置定时器Tim2的DMA/中断允许寄存器 
+   91 000000F2 F04F 0001       MOV              R0, #1
+   92 000000F6 4957            LDR              R1, =TIM2_DIER
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+   93 000000F8 6008            STR              R0, [R1]
+   94 000000FA         
+   95 000000FA         
+   96 000000FA         ; 设置NVIC的中断设置允许寄存器(ISER)
+   97 000000FA F04F 5080       MOV              R0, #TIM2_ITEN
+   98 000000FE 4956            LDR              R1, =ISER_TIM2 ;0xE000E100
+   99 00000100 6008            STR              R0, [R1]
+  100 00000102         
+  101 00000102         ; 设置定时器Tim2的配置寄存器，启动计数
+  102 00000102 F04F 0001       MOV              R0, #1
+  103 00000106 F04F 4180       LDR              R1, =TIM2_CR1
+  104 0000010A 6008            STR              R0, [R1]
+  105 0000010C F04F 0300       MOV              R3,#0
+  106 00000110         
+  107 00000110         LOOP
+  108 00000110 F7FF FFFE       BL               ShowDigits
+  109 00000114 E7FC            B                LOOP
+  110 00000116         
+  111 00000116         ; 所有RAM(MYDATA2)中的数据必须进行初始化
+  112 00000116         InitRamArea
+                               PROC
+  113 00000116 B560            PUSH             {R5,R6,LR}
+  114 00000118         
+  115 00000118         ; 初始化CURSELECT
+  116 00000118 4D50            LDR              R5,=CURSELECT
+  117 0000011A F04F 0600       MOV              R6,#0
+  118 0000011E 702E            STRB             R6,[R5]
+  119 00000120         
+  120 00000120         ; 初始化DIGITS
+  121 00000120 4D4F            LDR              R5,=DIGITS
+  122 00000122 F04F 0601       MOV              R6,#1
+  123 00000126 70EE            STRB             R6,[R5,#3]
+  124 00000128 F04F 0600       MOV              R6,#0
+  125 0000012C 70AE            STRB             R6,[R5,#2]
+  126 0000012E 706E            STRB             R6,[R5,#1]
+  127 00000130 702E            STRB             R6,[R5,#0]
+  128 00000132         
+  129 00000132 BD60            POP              {R5,R6,PC}
+  130 00000134                 ENDP
+  131 00000134         
+  132 00000134         AddTimer
+                               PROC
+  133 00000134 B522            PUSH             {R1,R5,LR}
+  134 00000136 4D4A            LDR              R5,=DIGITS
+  135 00000138         
+  136 00000138         ; 时间最低位加1，如果加到10(0xa),则本位清
+                       0，接着下一位加1，否则，过程返回
+  137 00000138 7829            LDRB             R1,[R5,#0]
+  138 0000013A F1A1 0101       SUB              R1,#1
+  139 0000013E 7029            STRB             R1,[R5,#0]
+  140 00000140 F1B1 3FFF       CMP              R1, #-1
+  141 00000144 D120            BNE              EXIT2
+  142 00000146 F04F 0109       MOV              R1,#9
+  143 0000014A 7029            STRB             R1,[R5,#0]
+  144 0000014C         
+  145 0000014C         ; 时间次低位加1
+  146 0000014C 7869            LDRB             R1,[R5,#1]
+  147 0000014E F1A1 0101       SUB              R1,#1
+  148 00000152 7069            STRB             R1,[R5,#1]
+
+
+
+ARM Macro Assembler    Page 6 
+
+
+  149 00000154 F1B1 3FFF       CMP              R1,#-1
+  150 00000158 D116            BNE              EXIT2
+  151 0000015A F04F 0105       MOV              R1,#5
+  152 0000015E 7069            STRB             R1,[R5,#1]
+  153 00000160         
+  154 00000160         ; 时间次高位加1
+  155 00000160 78A9            LDRB             R1,[R5,#2]
+  156 00000162 F1A1 0101       SUB              R1,#1
+  157 00000166 70A9            STRB             R1,[R5,#2]
+  158 00000168 F1B1 3FFF       CMP              R1,#-1
+  159 0000016C D10C            BNE              EXIT2
+  160 0000016E F04F 0109       MOV              R1,#9
+  161 00000172 70A9            STRB             R1,[R5,#2]
+  162 00000174         
+  163 00000174         ; 时间最高位加1
+  164 00000174 78E9            LDRB             R1,[R5,#3]
+  165 00000176 F1A1 0101       SUB              R1,#1
+  166 0000017A 70E9            STRB             R1,[R5,#3]
+  167 0000017C F1B1 3FFF       CMP              R1,#-1
+  168 00000180 D102            BNE              EXIT2
+  169 00000182 F04F 0102       MOV              R1,#2
+  170 00000186 70E9            STRB             R1,[R5,#3]
+  171 00000188         
+  172 00000188         EXIT2
+  173 00000188 BD22            POP              {R1,R5,PC}
+  174 0000018A                 ENDP
+  175 0000018A         
+  176 0000018A         ; 每次显示下一个数字(由CURSELECT指出)
+  177 0000018A         ShowDigits
+                               PROC
+  178 0000018A B5F0            PUSH             {R4,R5,R6,R7,LR}
+  179 0000018C         
+  180 0000018C         ; 确定下一个当前要显示的数字
+  181 0000018C 4D33            LDR              R5,=CURSELECT
+  182 0000018E 782E            LDRB             R6,[R5]
+  183 00000190 F106 0601       ADD              R6,#1       ; 每个数字4个�
+                                                            ��节
+  184 00000194 2E04            CMP              R6,#4
+  185 00000196 D101            BNE              SGNEXT
+  186 00000198 F04F 0600       MOV              R6,#0
+  187 0000019C         SGNEXT
+  188 0000019C 702E            STRB             R6,[R5]
+  189 0000019E         
+  190 0000019E         ; 取出字模
+  191 0000019E 4D30            LDR              R5,=DIGITS
+  192 000001A0 5D77            LDRB             R7,[R6,R5]
+  193 000001A2 4D30            LDR              R5, =CODES
+  194 000001A4 5DEF            LDRB             R7,[R5,R7]
+  195 000001A6         
+  196 000001A6         ; 形成数字控制线
+  197 000001A6 4D30            LDR              R5,=DIGITPOS
+  198 000001A8 5DAC            LDRB             R4,[R5,R6]
+  199 000001AA EA4F 2404       LSL              R4,R4,#8
+  200 000001AE 4427            ADD              R7,R4
+  201 000001B0         
+  202 000001B0         ; 把字模和位控制输出到PA0~11
+  203 000001B0 4D2E            LDR              R5, =GPIOA_ODR
+  204 000001B2 602F            STR              R7,[R5]
+  205 000001B4 BDF0            POP              {R4,R5,R6,R7,PC}
+
+
+
+ARM Macro Assembler    Page 7 
+
+
+  206 000001B6                 ENDP
+  207 000001B6         
+  208 000001B6         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  209 000001B6         ;;;RCC  时钟配置 HCLK=72MHz=HSE*9
+  210 000001B6         ;;;PCLK2=HCLK  PCLK1=HCLK/2
+  211 000001B6         ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+  212 000001B6         RCC_CONFIG_72MHZ
+  213 000001B6 492E            LDR              R1,=0X40021000 ;RCC_CR
+  214 000001B8 6808            LDR              R0,[R1]
+  215 000001BA F44F 3280       LDR              R2,=0X00010000 ;HSEON
+  216 000001BE EA40 0002       ORR              R0,R2
+  217 000001C2 6008            STR              R0,[R1]
+  218 000001C4         WAIT_HSE_RDY
+  219 000001C4 F44F 3200       LDR              R2,=0X00020000 ;HSERDY
+  220 000001C8 6808            LDR              R0,[R1]
+  221 000001CA 4010            ANDS             R0,R2
+  222 000001CC 2800            CMP              R0,#0
+  223 000001CE D0F9            BEQ              WAIT_HSE_RDY
+  224 000001D0 4928            LDR              R1,=0X40022000 ;FLASH_ACR
+  225 000001D2 F04F 0012       MOV              R0,#0X12
+  226 000001D6 6008            STR              R0,[R1]
+  227 000001D8 4927            LDR              R1,=0X40021004 ;RCC_CFGR时钟�
+                                                            ��置寄存器
+  228 000001DA 6808            LDR              R0,[R1]
+  229 000001DC         ;PLL倍频系数,PCLK2,PCLK1分频设置
+  230 000001DC         ;HSE 9倍频PCLK2=HCLK,PCLK1=HCLK/2
+  231 000001DC         ;HCLK=72MHz 0x001D0400
+  232 000001DC         ;HCLK=64MHz 0x00190400
+  233 000001DC         ;HCLK=48MHz 0x00110400
+  234 000001DC         ;HCLK=32MHz 0x00090400
+  235 000001DC         ;HCLK=24MHz 0x00050400
+  236 000001DC         ;HCLK=16MHz 0x00010400
+  237 000001DC 4A27            LDR              R2,=0x001D0400
+  238 000001DE EA40 0002       ORR              R0,R2
+  239 000001E2 6008            STR              R0,[R1]
+  240 000001E4 4922            LDR              R1,=0X40021000 ;RCC_CR  
+  241 000001E6 6808            LDR              R0,[R1]
+  242 000001E8 F04F 7280       LDR              R2,=0X01000000 ;PLLON
+  243 000001EC EA40 0002       ORR              R0,R2
+  244 000001F0 6008            STR              R0,[R1]
+  245 000001F2         WAIT_PLL_RDY
+  246 000001F2 F04F 7200       LDR              R2,=0X02000000 ;PLLRDY
+  247 000001F6 6808            LDR              R0,[R1]
+  248 000001F8 4010            ANDS             R0,R2
+  249 000001FA 2800            CMP              R0,#0
+  250 000001FC D0F9            BEQ              WAIT_PLL_RDY
+  251 000001FE 491E            LDR              R1,=0X40021004 ;RCC_CFGR
+  252 00000200 6808            LDR              R0,[R1]
+  253 00000202 F04F 0202       MOV              R2,#0X02
+  254 00000206 EA40 0002       ORR              R0,R2
+  255 0000020A 6008            STR              R0,[R1]
+  256 0000020C         WAIT_HCLK_USEPLL
+  257 0000020C 6808            LDR              R0,[R1]
+  258 0000020E F010 0008       ANDS             R0,#0X08
+  259 00000212 2808            CMP              R0,#0X08
+  260 00000214 D1FA            BNE              WAIT_HCLK_USEPLL
+  261 00000216 4770            BX               LR
+  262 00000218         
+  263 00000218         TIM2_IRQHandler
+
+
+
+ARM Macro Assembler    Page 8 
+
+
+                               PROC
+  264 00000218 B507            PUSH             {R0,R1,R2,LR}
+  265 0000021A         
+  266 0000021A 4819            LDR              R0, =GPIOA_BSRR
+  267 0000021C 4913            LDR              R1, =GPIOA_ODR
+  268 0000021E 680A            LDR              R2, [R1]    ; 读入PA.2的输�
+                                                            ��
+  269 00000220 F012 0F04       TST              R2, #0x4
+  270 00000224 D001            BEQ              TURNON      ; 如果为0，则�
+                                                            ��亮 
+  271 00000226 6002            STR              R2, [R0]    ; 将PA.2输出低�
+                                                            ��平
+  272 00000228 E000            B                EX
+  273 0000022A         TURNON
+  274 0000022A 6002            STR              R2, [R0]
+  275 0000022C         EX
+  276 0000022C 4915            LDR              R1, =TIM2_SR
+  277 0000022E F7FF FFFE       BL               AddTimer
+  278 00000232 F04F 0200       MOV              R2, #0      ; 清除更新事�
+                                                            �状态位
+  279 00000236 600A            STR              R2,[R1]
+  280 00000238         
+  281 00000238 BD07            POP              {R0,R1,R2,PC}
+  282 0000023A                 ENDP
+  283 0000023A                 END
+              00 00 4002101C 
+              40021018 
+              40010800 
+              40010804 
+              4000002C 
+              40000028 
+              4000000C 
+              E000E100 
+              00000000 
+              00000000 
+              00000000 
+              00000000 
+              4001080C 
+              40021000 
+              40022000 
+              40021004 
+              001D0400 
+              40010810 
+              40000010 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\startup_stm32f10x_md.d -o.\objects\startup_stm32f10x_md.
+o -I.\RTE\_Target_1 -I"D:\arm os\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Inclu
+de" -I"D:\arm os\ARM\CMSIS\Include" --predefine="__UVISION_VERSION SETA 525" --
+predefine="STM32F10X_MD SETA 1" --list=.\listings\startup_stm32f10x_md.lst ..\S
+TART\startup_stm32f10x_md.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+CODES 00000000
+
+Symbol: CODES
+   Definitions
+      At line 41 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 193 in file ..\START\startup_stm32f10x_md.s
+Comment: CODES used once
+DIGITPOS 0000000C
+
+Symbol: DIGITPOS
+   Definitions
+      At line 42 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 197 in file ..\START\startup_stm32f10x_md.s
+Comment: DIGITPOS used once
+MYDATA 00000000
+
+Symbol: MYDATA
+   Definitions
+      At line 40 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      None
+Comment: MYDATA unused
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+CURSELECT 00000004
+
+Symbol: CURSELECT
+   Definitions
+      At line 46 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 116 in file ..\START\startup_stm32f10x_md.s
+      At line 181 in file ..\START\startup_stm32f10x_md.s
+
+DIGITS 00000000
+
+Symbol: DIGITS
+   Definitions
+      At line 45 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 121 in file ..\START\startup_stm32f10x_md.s
+      At line 134 in file ..\START\startup_stm32f10x_md.s
+      At line 191 in file ..\START\startup_stm32f10x_md.s
+
+MYDATA2 00000000
+
+Symbol: MYDATA2
+   Definitions
+      At line 44 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      None
+Comment: MYDATA2 unused
+3 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+AddTimer 00000134
+
+Symbol: AddTimer
+   Definitions
+      At line 132 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 277 in file ..\START\startup_stm32f10x_md.s
+Comment: AddTimer used once
+EX 0000022C
+
+Symbol: EX
+   Definitions
+      At line 275 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 272 in file ..\START\startup_stm32f10x_md.s
+Comment: EX used once
+EXIT2 00000188
+
+Symbol: EXIT2
+   Definitions
+      At line 172 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 141 in file ..\START\startup_stm32f10x_md.s
+      At line 150 in file ..\START\startup_stm32f10x_md.s
+      At line 159 in file ..\START\startup_stm32f10x_md.s
+      At line 168 in file ..\START\startup_stm32f10x_md.s
+
+InitRamArea 00000116
+
+Symbol: InitRamArea
+   Definitions
+      At line 112 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 55 in file ..\START\startup_stm32f10x_md.s
+Comment: InitRamArea used once
+LOOP 00000110
+
+Symbol: LOOP
+   Definitions
+      At line 107 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 109 in file ..\START\startup_stm32f10x_md.s
+Comment: LOOP used once
+RCC_CONFIG_72MHZ 000001B6
+
+Symbol: RCC_CONFIG_72MHZ
+   Definitions
+      At line 212 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 56 in file ..\START\startup_stm32f10x_md.s
+Comment: RCC_CONFIG_72MHZ used once
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 48 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      None
+Comment: RESET unused
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+SGNEXT 0000019C
+
+Symbol: SGNEXT
+   Definitions
+      At line 187 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 185 in file ..\START\startup_stm32f10x_md.s
+Comment: SGNEXT used once
+START 000000B4
+
+Symbol: START
+   Definitions
+      At line 54 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 50 in file ..\START\startup_stm32f10x_md.s
+Comment: START used once
+ShowDigits 0000018A
+
+Symbol: ShowDigits
+   Definitions
+      At line 177 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 108 in file ..\START\startup_stm32f10x_md.s
+Comment: ShowDigits used once
+TIM2_IRQHandler 00000218
+
+Symbol: TIM2_IRQHandler
+   Definitions
+      At line 263 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 52 in file ..\START\startup_stm32f10x_md.s
+Comment: TIM2_IRQHandler used once
+TURNON 0000022A
+
+Symbol: TURNON
+   Definitions
+      At line 273 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 270 in file ..\START\startup_stm32f10x_md.s
+Comment: TURNON used once
+WAIT_HCLK_USEPLL 0000020C
+
+Symbol: WAIT_HCLK_USEPLL
+   Definitions
+      At line 256 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 260 in file ..\START\startup_stm32f10x_md.s
+Comment: WAIT_HCLK_USEPLL used once
+WAIT_HSE_RDY 000001C4
+
+Symbol: WAIT_HSE_RDY
+   Definitions
+      At line 218 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 223 in file ..\START\startup_stm32f10x_md.s
+Comment: WAIT_HSE_RDY used once
+WAIT_PLL_RDY 000001F2
+
+Symbol: WAIT_PLL_RDY
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Relocatable symbols
+
+   Definitions
+      At line 245 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 250 in file ..\START\startup_stm32f10x_md.s
+Comment: WAIT_PLL_RDY used once
+15 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+CFGAH 00003333
+
+Symbol: CFGAH
+   Definitions
+      At line 12 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 76 in file ..\START\startup_stm32f10x_md.s
+Comment: CFGAH used once
+CFGAL 33333333
+
+Symbol: CFGAL
+   Definitions
+      At line 11 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 73 in file ..\START\startup_stm32f10x_md.s
+Comment: CFGAL used once
+GIOPAEN 00000004
+
+Symbol: GIOPAEN
+   Definitions
+      At line 22 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 68 in file ..\START\startup_stm32f10x_md.s
+Comment: GIOPAEN used once
+GPIOA_BASE 40010800
+
+Symbol: GPIOA_BASE
+   Definitions
+      At line 4 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 5 in file ..\START\startup_stm32f10x_md.s
+      At line 6 in file ..\START\startup_stm32f10x_md.s
+      At line 7 in file ..\START\startup_stm32f10x_md.s
+      At line 8 in file ..\START\startup_stm32f10x_md.s
+      At line 9 in file ..\START\startup_stm32f10x_md.s
+
+GPIOA_BRR 40010814
+
+Symbol: GPIOA_BRR
+   Definitions
+      At line 9 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      None
+Comment: GPIOA_BRR unused
+GPIOA_BSRR 40010810
+
+Symbol: GPIOA_BSRR
+   Definitions
+      At line 8 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 266 in file ..\START\startup_stm32f10x_md.s
+Comment: GPIOA_BSRR used once
+GPIOA_CRH 40010804
+
+Symbol: GPIOA_CRH
+   Definitions
+      At line 6 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 77 in file ..\START\startup_stm32f10x_md.s
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: GPIOA_CRH used once
+GPIOA_CRL 40010800
+
+Symbol: GPIOA_CRL
+   Definitions
+      At line 5 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 74 in file ..\START\startup_stm32f10x_md.s
+Comment: GPIOA_CRL used once
+GPIOA_ODR 4001080C
+
+Symbol: GPIOA_ODR
+   Definitions
+      At line 7 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 203 in file ..\START\startup_stm32f10x_md.s
+      At line 267 in file ..\START\startup_stm32f10x_md.s
+
+ISER_TIM2 E000E100
+
+Symbol: ISER_TIM2
+   Definitions
+      At line 35 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 98 in file ..\START\startup_stm32f10x_md.s
+Comment: ISER_TIM2 used once
+RCC_APB1ENR 4002101C
+
+Symbol: RCC_APB1ENR
+   Definitions
+      At line 32 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 59 in file ..\START\startup_stm32f10x_md.s
+Comment: RCC_APB1ENR used once
+RCC_APB2ENR 40021018
+
+Symbol: RCC_APB2ENR
+   Definitions
+      At line 21 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 66 in file ..\START\startup_stm32f10x_md.s
+Comment: RCC_APB2ENR used once
+RCC_BASE 40021000
+
+Symbol: RCC_BASE
+   Definitions
+      At line 26 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 27 in file ..\START\startup_stm32f10x_md.s
+      At line 28 in file ..\START\startup_stm32f10x_md.s
+      At line 29 in file ..\START\startup_stm32f10x_md.s
+
+RCC_CFGR 40021004
+
+Symbol: RCC_CFGR
+   Definitions
+      At line 28 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      None
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Absolute symbols
+
+Comment: RCC_CFGR unused
+RCC_CIR 40021008
+
+Symbol: RCC_CIR
+   Definitions
+      At line 29 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      None
+Comment: RCC_CIR unused
+RCC_CR 40021000
+
+Symbol: RCC_CR
+   Definitions
+      At line 27 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      None
+Comment: RCC_CR unused
+RCC_CR_HSERDY 00020000
+
+Symbol: RCC_CR_HSERDY
+   Definitions
+      At line 30 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      None
+Comment: RCC_CR_HSERDY unused
+STACK_TOP 20002000
+
+Symbol: STACK_TOP
+   Definitions
+      At line 38 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 49 in file ..\START\startup_stm32f10x_md.s
+Comment: STACK_TOP used once
+TIM2 40000000
+
+Symbol: TIM2
+   Definitions
+      At line 14 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 15 in file ..\START\startup_stm32f10x_md.s
+      At line 16 in file ..\START\startup_stm32f10x_md.s
+      At line 17 in file ..\START\startup_stm32f10x_md.s
+      At line 18 in file ..\START\startup_stm32f10x_md.s
+      At line 19 in file ..\START\startup_stm32f10x_md.s
+
+TIM2EN 00000001
+
+Symbol: TIM2EN
+   Definitions
+      At line 33 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 61 in file ..\START\startup_stm32f10x_md.s
+Comment: TIM2EN used once
+TIM2_ARR 4000002C
+
+Symbol: TIM2_ARR
+   Definitions
+      At line 15 in file ..\START\startup_stm32f10x_md.s
+   Uses
+
+
+
+ARM Macro Assembler    Page 4 Alphabetic symbol ordering
+Absolute symbols
+
+      At line 82 in file ..\START\startup_stm32f10x_md.s
+Comment: TIM2_ARR used once
+TIM2_CR1 40000000
+
+Symbol: TIM2_CR1
+   Definitions
+      At line 18 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 103 in file ..\START\startup_stm32f10x_md.s
+Comment: TIM2_CR1 used once
+TIM2_DIER 4000000C
+
+Symbol: TIM2_DIER
+   Definitions
+      At line 17 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 92 in file ..\START\startup_stm32f10x_md.s
+Comment: TIM2_DIER used once
+TIM2_ITEN 10000000
+
+Symbol: TIM2_ITEN
+   Definitions
+      At line 36 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 97 in file ..\START\startup_stm32f10x_md.s
+Comment: TIM2_ITEN used once
+TIM2_PSC 40000028
+
+Symbol: TIM2_PSC
+   Definitions
+      At line 16 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 87 in file ..\START\startup_stm32f10x_md.s
+Comment: TIM2_PSC used once
+TIM2_SR 40000010
+
+Symbol: TIM2_SR
+   Definitions
+      At line 19 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 276 in file ..\START\startup_stm32f10x_md.s
+Comment: TIM2_SR used once
+26 symbols
+381 symbols in table

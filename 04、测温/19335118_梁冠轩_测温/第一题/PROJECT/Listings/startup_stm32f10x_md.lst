@@ -1,0 +1,669 @@
+
+
+
+ARM Macro Assembler    Page 1 
+
+
+    1 00000000 40010800 
+                       GPIOA_BASE
+                               EQU              0x40010800  ; GPIOA???
+    2 00000000 40010800 
+                       GPIOA_CRL
+                               EQU              GPIOA_BASE  ; ??????
+    3 00000000 40010804 
+                       GPIOA_CRH
+                               EQU              GPIOA_BASE+4 ; ??????
+    4 00000000 40010808 
+                       GPIOA_IDR
+                               EQU              GPIOA_BASE+0x08 ; ???????
+    5 00000000 4001080C 
+                       GPIOA_ODR
+                               EQU              GPIOA_BASE+0x0c ; ???????
+    6 00000000 40010810 
+                       GPIOA_BSRR
+                               EQU              GPIOA_BASE+0x10 ; ?????/?????
+    7 00000000 40010814 
+                       GPIOA_BRR
+                               EQU              GPIOA_BASE+0x14 ; ????????
+    8 00000000         
+    9 00000000 33333333 
+                       CFGAL   EQU              0x33333333  ; PA0~7:  ????,50MH
+                                                            z
+   10 00000000 00000333 
+                       CFGAH   EQU              0x00000333  ; PA8~10: ????,50MH
+                                                            z
+   11 00000000         
+   12 00000000 40021018 
+                       RCC_APB2ENR
+                               EQU              0x40021018
+   13 00000000 00000004 
+                       GIOPAEN EQU              0x00000004  ; GPIOA ???   
+   14 00000000 00000004 
+                       APB2ENALL
+                               EQU              GIOPAEN
+   15 00000000         
+   16 00000000 00000001 
+                       CLEAR   EQU              0x01
+   17 00000000 00000002 
+                       RESETCUR
+                               EQU              0x02
+   18 00000000 00000006 
+                       INMODE  EQU              0x06
+   19 00000000 0000000C 
+                       DISPON  EQU              0x0c
+   20 00000000 00000038 
+                       DISPMODE
+                               EQU              0x38
+   21 00000000 000000C0 
+                       CRLF    EQU              0xc0
+   22 00000000 00000230 
+                       WRTDIGIT
+                               EQU              0x0230
+   23 00000000 00000241 
+                       WRTLETTER
+                               EQU              0x0241
+   24 00000000 0000022E 
+
+
+
+ARM Macro Assembler    Page 2 
+
+
+                       WRTDOT  EQU              0x022e
+   25 00000000 00000220 
+                       WRTSPACE
+                               EQU              0x0220
+   26 00000000 00000030 
+                       ZEROMODE
+                               EQU              0x30
+   27 00000000 00000033 
+                       TWOMODE EQU              0x33
+   28 00000000         
+   29 00000000 20002000 
+                       STACK_TOP
+                               EQU              0X20002000
+   30 00000000                 AREA             RESET,CODE,READONLY ; AREA?????
+                                                            
+   31 00000000 20002000        DCD              STACK_TOP   ; MSP?????
+   32 00000004 00000000        DCD              START       ; ??,PC??? 
+   33 00000008                 ENTRY                        ; ??????,??C??,ENTR
+                                                            Y???
+   34 00000008         START                                ; ??????????,????
+   35 00000008         
+   36 00000008         ; ??RCC?APB2?????,??GPIOA
+   37 00000008 496A            LDR              R1, =RCC_APB2ENR
+   38 0000000A F04F 0004       LDR              R0, =APB2ENALL
+   39 0000000E 6008            STR              R0, [R1]
+   40 00000010         
+   41 00000010         ; ??GPIO?????,?PA0~PA10???????(50MHz)
+   42 00000010 F04F 3033       MOV              R0, #CFGAL
+   43 00000014 4968            LDR              R1, =GPIOA_CRL
+   44 00000016 6008            STR              R0, [R1]
+   45 00000018 F240 3033       LDR              R0, =CFGAH
+   46 0000001C 4967            LDR              R1, =GPIOA_CRH
+   47 0000001E 6008            STR              R0, [R1]
+   48 00000020         
+   49 00000020 F7FF FFFE       BL               InitLED
+   50 00000024 4966            LDR              R1, =GPIOA_ODR
+   51 00000026 F44F 700C       MOV              R0, #WRTDIGIT
+   52 0000002A         
+   53 0000002A F100 0202       ADD              R2,R0,#2
+   54 0000002E 600A            STR              R2,[R1]
+   55 00000030 F000 F8A3       BL               EXCCMD
+   56 00000034         
+   57 00000034 F100 0200       ADD              R2,R0,#0
+   58 00000038 600A            STR              R2,[R1]
+   59 0000003A F000 F89E       BL               EXCCMD
+   60 0000003E         
+   61 0000003E F100 0202       ADD              R2,R0,#2
+   62 00000042 600A            STR              R2,[R1]
+   63 00000044 F000 F899       BL               EXCCMD
+   64 00000048         
+   65 00000048 F100 0200       ADD              R2,R0,#0
+   66 0000004C 600A            STR              R2,[R1]
+   67 0000004E F000 F894       BL               EXCCMD
+   68 00000052         
+   69 00000052 F240 222E       MOV              R2,#WRTDOT
+   70 00000056 600A            STR              R2,[R1]
+   71 00000058 F000 F88F       BL               EXCCMD
+   72 0000005C         
+   73 0000005C F100 0201       ADD              R2,R0,#1
+
+
+
+ARM Macro Assembler    Page 3 
+
+
+   74 00000060 600A            STR              R2,[R1]
+   75 00000062 F000 F88A       BL               EXCCMD
+   76 00000066         
+   77 00000066 F100 0201       ADD              R2,R0,#1
+   78 0000006A 600A            STR              R2,[R1]
+   79 0000006C F000 F885       BL               EXCCMD
+   80 00000070         
+   81 00000070 F240 222E       MOV              R2,#WRTDOT
+   82 00000074 600A            STR              R2,[R1]
+   83 00000076 F000 F880       BL               EXCCMD
+   84 0000007A         
+   85 0000007A F100 0208       ADD              R2,R0,#8
+   86 0000007E 600A            STR              R2,[R1]
+   87 00000080 F000 F87B       BL               EXCCMD
+   88 00000084         
+   89 00000084 F44F 7208       MOV              R2,#WRTSPACE
+   90 00000088 600A            STR              R2,[R1]
+   91 0000008A F000 F876       BL               EXCCMD
+   92 0000008E 600A            STR              R2,[R1]
+   93 00000090 F000 F873       BL               EXCCMD
+   94 00000094 600A            STR              R2,[R1]
+   95 00000096 F000 F870       BL               EXCCMD
+   96 0000009A         
+   97 0000009A F100 0202       ADD              R2,R0,#2
+   98 0000009E 600A            STR              R2,[R1]
+   99 000000A0 F000 F86B       BL               EXCCMD
+  100 000000A4         
+  101 000000A4 F100 0203       ADD              R2,R0,#3
+  102 000000A8 600A            STR              R2,[R1]
+  103 000000AA F000 F866       BL               EXCCMD
+  104 000000AE         
+  105 000000AE F44F 7208       MOV              R2,#WRTSPACE
+  106 000000B2 600A            STR              R2,[R1]
+  107 000000B4 F000 F861       BL               EXCCMD
+  108 000000B8         
+  109 000000B8 F240 2041       MOV              R0,#WRTLETTER
+  110 000000BC         
+  111 000000BC F100 0202       ADD              R2,R0,#('C'-'A')
+  112 000000C0 600A            STR              R2,[R1]
+  113 000000C2 F000 F85A       BL               EXCCMD
+  114 000000C6         
+  115 000000C6         
+  116 000000C6 F04F 02C0       MOV              R2,#CRLF
+  117 000000CA 600A            STR              R2,[R1]
+  118 000000CC F000 F855       BL               EXCCMD
+  119 000000D0         
+  120 000000D0 F100 0212       ADD              R2,R0,#('S'-'A')
+  121 000000D4 600A            STR              R2,[R1]
+  122 000000D6 F000 F850       BL               EXCCMD
+  123 000000DA         
+  124 000000DA F100 0218       ADD              R2,R0,#('Y'-'A')
+  125 000000DE 600A            STR              R2,[R1]
+  126 000000E0 F000 F84B       BL               EXCCMD
+  127 000000E4         
+  128 000000E4 F100 0212       ADD              R2,R0,#('S'-'A')
+  129 000000E8 600A            STR              R2,[R1]
+  130 000000EA F000 F846       BL               EXCCMD
+  131 000000EE         
+  132 000000EE F100 0214       ADD              R2,R0,#('U'-'A')
+
+
+
+ARM Macro Assembler    Page 4 
+
+
+  133 000000F2 600A            STR              R2,[R1]
+  134 000000F4 F000 F841       BL               EXCCMD
+  135 000000F8         
+  136 000000F8 F240 222E       MOV              R2,#WRTDOT
+  137 000000FC 600A            STR              R2,[R1]
+  138 000000FE F000 F83C       BL               EXCCMD
+  139 00000102         
+  140 00000102 F100 0204       ADD              R2,R0,#('E'-'A')
+  141 00000106 600A            STR              R2,[R1]
+  142 00000108 F000 F837       BL               EXCCMD
+  143 0000010C         
+  144 0000010C F100 0203       ADD              R2,R0,#('D'-'A')
+  145 00000110 600A            STR              R2,[R1]
+  146 00000112 F000 F832       BL               EXCCMD
+  147 00000116         
+  148 00000116 F100 0214       ADD              R2,R0,#('U'-'A')
+  149 0000011A 600A            STR              R2,[R1]
+  150 0000011C F000 F82D       BL               EXCCMD
+  151 00000120         
+  152 00000120 F240 222E       MOV              R2,#WRTDOT
+  153 00000124 600A            STR              R2,[R1]
+  154 00000126 F000 F828       BL               EXCCMD
+  155 0000012A         
+  156 0000012A F100 0202       ADD              R2,R0,#('C'-'A')
+  157 0000012E 600A            STR              R2,[R1]
+  158 00000130 F000 F823       BL               EXCCMD
+  159 00000134         
+  160 00000134 F100 020D       ADD              R2,R0,#('N'-'A')
+  161 00000138 600A            STR              R2,[R1]
+  162 0000013A F000 F81E       BL               EXCCMD
+  163 0000013E         
+  164 0000013E         LOOP
+  165 0000013E E7FE            B                LOOP
+  166 00000140         
+  167 00000140         InitLED PROC
+  168 00000140 B503            PUSH{R0,R1,LR}
+  169 00000142 491F            LDR              R1,=GPIOA_ODR
+  170 00000144         
+  171 00000144 F04F 0038       MOV              R0, #DISPMODE
+  172 00000148 6008            STR              R0,[R1]
+  173 0000014A F000 F816       BL               EXCCMD
+  174 0000014E         
+  175 0000014E F04F 000C       MOV              R0,#DISPON
+  176 00000152 6008            STR              R0,[R1]
+  177 00000154 F000 F811       BL               EXCCMD
+  178 00000158         
+  179 00000158 F04F 0006       MOV              R0, #INMODE
+  180 0000015C 6008            STR              R0, [R1]
+  181 0000015E F000 F80C       BL               EXCCMD
+  182 00000162         
+  183 00000162 F04F 0001       MOV              R0, #CLEAR
+  184 00000166 6008            STR              R0, [R1]
+  185 00000168 F000 F807       BL               EXCCMD
+  186 0000016C         
+  187 0000016C F04F 0002       MOV              R0, #RESETCUR
+  188 00000170 6008            STR              R0, [R1]
+  189 00000172 F000 F802       BL               EXCCMD
+  190 00000176         
+  191 00000176 E8BD 4003       POP{R0,R1,LR}
+
+
+
+ARM Macro Assembler    Page 5 
+
+
+  192 0000017A         ENDP
+  193 0000017A         
+  194 0000017A         EXCCMD
+  195 0000017A B503            PUSH             {R0, R1, LR}
+  196 0000017C 4911            LDR              R1, =GPIOA_BSRR
+  197 0000017E F44F 6080       MOV              R0, #0x00000400 ;set enable 
+  198 00000182 6008            STR              R0, [R1]
+  199 00000184 F04F 6080       MOV              R0, #0x04000000 ;reset enable
+  200 00000188 6008            STR              R0, [R1]
+  201 0000018A F000 F801       BL               Delay
+  202 0000018E BD03            POP              {R0, R1, PC}
+  203 00000190         
+  204 00000190         Delay
+  205 00000190 B507            PUSH             {R0,R1,R2,LR}
+  206 00000192 2000            MOVS             R0,#0
+  207 00000194 2100            MOVS             R1,#0
+  208 00000196 2200            MOVS             R2,#0
+  209 00000198         
+  210 00000198         DelayLoop0
+  211 00000198 3001            ADDS             R0,#1
+  212 0000019A         
+  213 0000019A 2821            CMP              R0,#33
+  214 0000019C D3FC            BCC              DelayLoop0
+  215 0000019E         
+  216 0000019E 2000            MOVS             R0,#0
+  217 000001A0 3101            ADDS             R1,#1
+  218 000001A2 2921            CMP              R1,#33
+  219 000001A4 D3F8            BCC              DelayLoop0
+  220 000001A6         
+  221 000001A6 2000            MOVS             R0,#0
+  222 000001A8 2100            MOVS             R1,#0
+  223 000001AA 3201            ADDS             R2,#1
+  224 000001AC 2A03            CMP              R2,#3
+  225 000001AE D3F3            BCC              DelayLoop0
+  226 000001B0 BD07            POP              {R0,R1,R2,PC}
+  227 000001B2         END
+                       
+              00 00 40021018 
+              40010800 
+              40010804 
+              4001080C 
+              40010810 
+Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M3 --apcs=interw
+ork --depend=.\objects\startup_stm32f10x_md.d -o.\objects\startup_stm32f10x_md.
+o -I.\RTE\_Target_1 -I"D:\arm os\ARM\PACK\Keil\STM32F1xx_DFP\2.3.0\Device\Inclu
+de" -I"D:\arm os\ARM\CMSIS\Include" --predefine="__UVISION_VERSION SETA 525" --
+predefine="STM32F10X_MD SETA 1" --list=.\listings\startup_stm32f10x_md.lst ..\S
+TART\startup_stm32f10x_md.s
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Relocatable symbols
+
+Delay 00000190
+
+Symbol: Delay
+   Definitions
+      At line 204 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 201 in file ..\START\startup_stm32f10x_md.s
+Comment: Delay used once
+DelayLoop0 00000198
+
+Symbol: DelayLoop0
+   Definitions
+      At line 210 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 214 in file ..\START\startup_stm32f10x_md.s
+      At line 219 in file ..\START\startup_stm32f10x_md.s
+      At line 225 in file ..\START\startup_stm32f10x_md.s
+
+END 000001B2
+
+Symbol: END
+   Definitions
+      At line 227 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      None
+Comment: END unused
+ENDP 0000017A
+
+Symbol: ENDP
+   Definitions
+      At line 192 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      None
+Comment: ENDP unused
+EXCCMD 0000017A
+
+Symbol: EXCCMD
+   Definitions
+      At line 194 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 55 in file ..\START\startup_stm32f10x_md.s
+      At line 59 in file ..\START\startup_stm32f10x_md.s
+      At line 63 in file ..\START\startup_stm32f10x_md.s
+      At line 67 in file ..\START\startup_stm32f10x_md.s
+      At line 71 in file ..\START\startup_stm32f10x_md.s
+      At line 75 in file ..\START\startup_stm32f10x_md.s
+      At line 79 in file ..\START\startup_stm32f10x_md.s
+      At line 83 in file ..\START\startup_stm32f10x_md.s
+      At line 87 in file ..\START\startup_stm32f10x_md.s
+      At line 91 in file ..\START\startup_stm32f10x_md.s
+      At line 93 in file ..\START\startup_stm32f10x_md.s
+      At line 95 in file ..\START\startup_stm32f10x_md.s
+      At line 99 in file ..\START\startup_stm32f10x_md.s
+      At line 103 in file ..\START\startup_stm32f10x_md.s
+      At line 107 in file ..\START\startup_stm32f10x_md.s
+      At line 113 in file ..\START\startup_stm32f10x_md.s
+      At line 118 in file ..\START\startup_stm32f10x_md.s
+      At line 122 in file ..\START\startup_stm32f10x_md.s
+      At line 126 in file ..\START\startup_stm32f10x_md.s
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Relocatable symbols
+
+      At line 130 in file ..\START\startup_stm32f10x_md.s
+      At line 134 in file ..\START\startup_stm32f10x_md.s
+      At line 138 in file ..\START\startup_stm32f10x_md.s
+      At line 142 in file ..\START\startup_stm32f10x_md.s
+      At line 146 in file ..\START\startup_stm32f10x_md.s
+      At line 150 in file ..\START\startup_stm32f10x_md.s
+      At line 154 in file ..\START\startup_stm32f10x_md.s
+      At line 158 in file ..\START\startup_stm32f10x_md.s
+      At line 162 in file ..\START\startup_stm32f10x_md.s
+      At line 173 in file ..\START\startup_stm32f10x_md.s
+      At line 177 in file ..\START\startup_stm32f10x_md.s
+      At line 181 in file ..\START\startup_stm32f10x_md.s
+      At line 185 in file ..\START\startup_stm32f10x_md.s
+      At line 189 in file ..\START\startup_stm32f10x_md.s
+
+InitLED 00000140
+
+Symbol: InitLED
+   Definitions
+      At line 167 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 49 in file ..\START\startup_stm32f10x_md.s
+Comment: InitLED used once
+LOOP 0000013E
+
+Symbol: LOOP
+   Definitions
+      At line 164 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 165 in file ..\START\startup_stm32f10x_md.s
+Comment: LOOP used once
+RESET 00000000
+
+Symbol: RESET
+   Definitions
+      At line 30 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      None
+Comment: RESET unused
+START 00000008
+
+Symbol: START
+   Definitions
+      At line 34 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 32 in file ..\START\startup_stm32f10x_md.s
+Comment: START used once
+9 symbols
+
+
+
+ARM Macro Assembler    Page 1 Alphabetic symbol ordering
+Absolute symbols
+
+APB2ENALL 00000004
+
+Symbol: APB2ENALL
+   Definitions
+      At line 14 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 38 in file ..\START\startup_stm32f10x_md.s
+Comment: APB2ENALL used once
+CFGAH 00000333
+
+Symbol: CFGAH
+   Definitions
+      At line 10 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 45 in file ..\START\startup_stm32f10x_md.s
+Comment: CFGAH used once
+CFGAL 33333333
+
+Symbol: CFGAL
+   Definitions
+      At line 9 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 42 in file ..\START\startup_stm32f10x_md.s
+Comment: CFGAL used once
+CLEAR 00000001
+
+Symbol: CLEAR
+   Definitions
+      At line 16 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 183 in file ..\START\startup_stm32f10x_md.s
+Comment: CLEAR used once
+CRLF 000000C0
+
+Symbol: CRLF
+   Definitions
+      At line 21 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 116 in file ..\START\startup_stm32f10x_md.s
+Comment: CRLF used once
+DISPMODE 00000038
+
+Symbol: DISPMODE
+   Definitions
+      At line 20 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 171 in file ..\START\startup_stm32f10x_md.s
+Comment: DISPMODE used once
+DISPON 0000000C
+
+Symbol: DISPON
+   Definitions
+      At line 19 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 175 in file ..\START\startup_stm32f10x_md.s
+Comment: DISPON used once
+GIOPAEN 00000004
+
+Symbol: GIOPAEN
+
+
+
+ARM Macro Assembler    Page 2 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 13 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 14 in file ..\START\startup_stm32f10x_md.s
+Comment: GIOPAEN used once
+GPIOA_BASE 40010800
+
+Symbol: GPIOA_BASE
+   Definitions
+      At line 1 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 2 in file ..\START\startup_stm32f10x_md.s
+      At line 3 in file ..\START\startup_stm32f10x_md.s
+      At line 4 in file ..\START\startup_stm32f10x_md.s
+      At line 5 in file ..\START\startup_stm32f10x_md.s
+      At line 6 in file ..\START\startup_stm32f10x_md.s
+      At line 7 in file ..\START\startup_stm32f10x_md.s
+
+GPIOA_BRR 40010814
+
+Symbol: GPIOA_BRR
+   Definitions
+      At line 7 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      None
+Comment: GPIOA_BRR unused
+GPIOA_BSRR 40010810
+
+Symbol: GPIOA_BSRR
+   Definitions
+      At line 6 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 196 in file ..\START\startup_stm32f10x_md.s
+Comment: GPIOA_BSRR used once
+GPIOA_CRH 40010804
+
+Symbol: GPIOA_CRH
+   Definitions
+      At line 3 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 46 in file ..\START\startup_stm32f10x_md.s
+Comment: GPIOA_CRH used once
+GPIOA_CRL 40010800
+
+Symbol: GPIOA_CRL
+   Definitions
+      At line 2 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 43 in file ..\START\startup_stm32f10x_md.s
+Comment: GPIOA_CRL used once
+GPIOA_IDR 40010808
+
+Symbol: GPIOA_IDR
+   Definitions
+      At line 4 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      None
+Comment: GPIOA_IDR unused
+GPIOA_ODR 4001080C
+
+
+
+ARM Macro Assembler    Page 3 Alphabetic symbol ordering
+Absolute symbols
+
+
+Symbol: GPIOA_ODR
+   Definitions
+      At line 5 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 50 in file ..\START\startup_stm32f10x_md.s
+      At line 169 in file ..\START\startup_stm32f10x_md.s
+
+INMODE 00000006
+
+Symbol: INMODE
+   Definitions
+      At line 18 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 179 in file ..\START\startup_stm32f10x_md.s
+Comment: INMODE used once
+RCC_APB2ENR 40021018
+
+Symbol: RCC_APB2ENR
+   Definitions
+      At line 12 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 37 in file ..\START\startup_stm32f10x_md.s
+Comment: RCC_APB2ENR used once
+RESETCUR 00000002
+
+Symbol: RESETCUR
+   Definitions
+      At line 17 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 187 in file ..\START\startup_stm32f10x_md.s
+Comment: RESETCUR used once
+STACK_TOP 20002000
+
+Symbol: STACK_TOP
+   Definitions
+      At line 29 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 31 in file ..\START\startup_stm32f10x_md.s
+Comment: STACK_TOP used once
+TWOMODE 00000033
+
+Symbol: TWOMODE
+   Definitions
+      At line 27 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      None
+Comment: TWOMODE unused
+WRTDIGIT 00000230
+
+Symbol: WRTDIGIT
+   Definitions
+      At line 22 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 51 in file ..\START\startup_stm32f10x_md.s
+Comment: WRTDIGIT used once
+WRTDOT 0000022E
+
+Symbol: WRTDOT
+
+
+
+ARM Macro Assembler    Page 4 Alphabetic symbol ordering
+Absolute symbols
+
+   Definitions
+      At line 24 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 69 in file ..\START\startup_stm32f10x_md.s
+      At line 81 in file ..\START\startup_stm32f10x_md.s
+      At line 136 in file ..\START\startup_stm32f10x_md.s
+      At line 152 in file ..\START\startup_stm32f10x_md.s
+
+WRTLETTER 00000241
+
+Symbol: WRTLETTER
+   Definitions
+      At line 23 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 109 in file ..\START\startup_stm32f10x_md.s
+Comment: WRTLETTER used once
+WRTSPACE 00000220
+
+Symbol: WRTSPACE
+   Definitions
+      At line 25 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      At line 89 in file ..\START\startup_stm32f10x_md.s
+      At line 105 in file ..\START\startup_stm32f10x_md.s
+
+ZEROMODE 00000030
+
+Symbol: ZEROMODE
+   Definitions
+      At line 26 in file ..\START\startup_stm32f10x_md.s
+   Uses
+      None
+Comment: ZEROMODE unused
+25 symbols
+368 symbols in table

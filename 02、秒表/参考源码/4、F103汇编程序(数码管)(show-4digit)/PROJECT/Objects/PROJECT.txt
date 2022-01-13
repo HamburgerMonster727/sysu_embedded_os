@@ -1,0 +1,166 @@
+
+========================================================================
+
+** ELF Header Information
+
+    File Name: C:\Users\²ËÐìöï\Desktop\02¡¢Ãë±í\²Î¿¼Ô´Âë\4¡¢F103»ã±à³ÌÐò(ÊýÂë¹Ü)(show-4digit)\PROJECT\Objects\PROJECT.axf
+
+    Machine class: ELFCLASS32 (32-bit)
+    Data encoding: ELFDATA2LSB (Little endian)
+    Header version: EV_CURRENT (Current version)
+    Operating System ABI: none
+    ABI Version: 0
+    File Type: ET_EXEC (Executable) (2)
+    Machine: EM_ARM (ARM)
+
+    Image Entry point: 0x08000009
+    Flags: EF_ARM_HASENTRY (0x00000002)
+
+    ARM ELF revision: 0 (SDT / legacy GNU / unspecified)
+
+    Built with
+    Component: ARM Compiler 5.06 update 6 (build 750) Tool: armasm [4d35ec]
+    Component: ARM Compiler 5.06 update 6 (build 750) Tool: armlink [4d35ed]
+
+    Header size: 52 bytes (0x34)
+    Program header entry size: 32 bytes (0x20)
+    Section header entry size: 40 bytes (0x28)
+
+    Program header entries: 1
+    Section header entries: 12
+
+    Program header offset: 2088 (0x00000828)
+    Section header offset: 2120 (0x00000848)
+
+    Section header string table index: 11
+
+========================================================================
+
+** Program header #0 (PT_LOAD) [PF_X + PF_W + PF_R + PF_ARM_ENTRY]
+    Size : 188 bytes
+    Virtual address: 0x08000000 (Alignment 4)
+
+
+========================================================================
+
+** Section #1 'ER_IROM1' (SHT_PROGBITS) [SHF_ALLOC + SHF_EXECINSTR]
+    Size   : 180 bytes (alignment 4)
+    Address: 0x08000000
+
+    $d
+    RESET
+        0x08000000:    20002000    . .     DCD    536879104
+        0x08000004:    08000009    ....    DCD    134217737
+    $t
+    START
+        0x08000008:    f000f812    ....    BL       InitRamArea ; 0x8000030
+        0x0800000c:    491d        .I      LDR      r1,[pc,#116] ; [0x8000084] = 0x40021018
+        0x0800000e:    6808        .h      LDR      r0,[r1,#0]
+        0x08000010:    f04f0204    O...    MOV      r2,#4
+        0x08000014:    ea400002    @...    ORR      r0,r0,r2
+        0x08000018:    6008        .`      STR      r0,[r1,#0]
+        0x0800001a:    f04f3033    O.30    MOV      r0,#0x33333333
+        0x0800001e:    491a        .I      LDR      r1,[pc,#104] ; [0x8000088] = 0x40010800
+        0x08000020:    6008        .`      STR      r0,[r1,#0]
+        0x08000022:    f2433033    C.30    MOV      r0,#0x3333
+        0x08000026:    4919        .I      LDR      r1,[pc,#100] ; [0x800008c] = 0x40010804
+        0x08000028:    6008        .`      STR      r0,[r1,#0]
+        0x0800002a:    f000f814    ....    BL       ShowDigits ; 0x8000056
+        0x0800002e:    e7fc        ..      B        0x800002a ; START + 34
+    InitRamArea
+        0x08000030:    b560        `.      PUSH     {r5,r6,lr}
+        0x08000032:    4d17        .M      LDR      r5,[pc,#92] ; [0x8000090] = 0x20000004
+        0x08000034:    f04f0600    O...    MOV      r6,#0
+        0x08000038:    702e        .p      STRB     r6,[r5,#0]
+        0x0800003a:    4d16        .M      LDR      r5,[pc,#88] ; [0x8000094] = 0x20000000
+        0x0800003c:    f04f0600    O...    MOV      r6,#0
+        0x08000040:    70ee        .p      STRB     r6,[r5,#3]
+        0x08000042:    f04f0601    O...    MOV      r6,#1
+        0x08000046:    70ae        .p      STRB     r6,[r5,#2]
+        0x08000048:    f04f0602    O...    MOV      r6,#2
+        0x0800004c:    706e        np      STRB     r6,[r5,#1]
+        0x0800004e:    f04f0603    O...    MOV      r6,#3
+        0x08000052:    702e        .p      STRB     r6,[r5,#0]
+        0x08000054:    bd60        `.      POP      {r5,r6,pc}
+    ShowDigits
+        0x08000056:    b5f0        ..      PUSH     {r4-r7,lr}
+        0x08000058:    4d0d        .M      LDR      r5,[pc,#52] ; [0x8000090] = 0x20000004
+        0x0800005a:    782e        .x      LDRB     r6,[r5,#0]
+        0x0800005c:    f1060601    ....    ADD      r6,r6,#1
+        0x08000060:    2e04        ..      CMP      r6,#4
+        0x08000062:    d101        ..      BNE      0x8000068 ; ShowDigits + 18
+        0x08000064:    f04f0600    O...    MOV      r6,#0
+        0x08000068:    702e        .p      STRB     r6,[r5,#0]
+        0x0800006a:    4d0a        .M      LDR      r5,[pc,#40] ; [0x8000094] = 0x20000000
+        0x0800006c:    5d77        w]      LDRB     r7,[r6,r5]
+        0x0800006e:    4d0a        .M      LDR      r5,[pc,#40] ; [0x8000098] = 0x80000a4
+        0x08000070:    5def        .]      LDRB     r7,[r5,r7]
+        0x08000072:    4d0a        .M      LDR      r5,[pc,#40] ; [0x800009c] = 0x80000b0
+        0x08000074:    5dac        .]      LDRB     r4,[r5,r6]
+        0x08000076:    ea4f2404    O..$    LSL      r4,r4,#8
+        0x0800007a:    4427        'D      ADD      r7,r7,r4
+        0x0800007c:    4d08        .M      LDR      r5,[pc,#32] ; [0x80000a0] = 0x4001080c
+        0x0800007e:    602f        /`      STR      r7,[r5,#0]
+        0x08000080:    bdf0        ..      POP      {r4-r7,pc}
+        0x08000082:    bf00        ..      NOP      
+    $d
+        0x08000084:    40021018    ...@    DCD    1073877016
+        0x08000088:    40010800    ...@    DCD    1073809408
+        0x0800008c:    40010804    ...@    DCD    1073809412
+        0x08000090:    20000004    ...     DCD    536870916
+        0x08000094:    20000000    ...     DCD    536870912
+        0x08000098:    080000a4    ....    DCD    134217892
+        0x0800009c:    080000b0    ....    DCD    134217904
+        0x080000a0:    4001080c    ...@    DCD    1073809420
+    $d.realdata
+    MYDATA
+    CODES
+        0x080000a4:    4f5b063f    ?.[O    DCD    1331365439
+        0x080000a8:    077d6d66    fm}.    DCD    125660518
+        0x080000ac:    00006f7f    .o..    DCD    28543
+    DIGITPOS
+        0x080000b0:    0e0d0b07    ....    DCD    235735815
+
+** Section #2 'RW_IRAM1' (SHT_PROGBITS) [SHF_ALLOC + SHF_WRITE]
+    Size   : 8 bytes (alignment 4)
+    Address: 0x20000000
+
+
+** Section #3 '.debug_abbrev' (SHT_PROGBITS)
+    Size   : 32 bytes
+
+
+** Section #4 '.debug_frame' (SHT_PROGBITS)
+    Size   : 84 bytes
+
+
+** Section #5 '.debug_info' (SHT_PROGBITS)
+    Size   : 260 bytes
+
+
+** Section #6 '.debug_line' (SHT_PROGBITS)
+    Size   : 128 bytes
+
+
+** Section #7 '.symtab' (SHT_SYMTAB)
+    Size   : 288 bytes (alignment 4)
+    String table #8 '.strtab'
+    Last local symbol no. 16
+
+
+** Section #8 '.strtab' (SHT_STRTAB)
+    Size   : 272 bytes
+
+
+** Section #9 '.note' (SHT_NOTE)
+    Size   : 24 bytes (alignment 4)
+
+
+** Section #10 '.comment' (SHT_PROGBITS)
+    Size   : 648 bytes
+
+
+** Section #11 '.shstrtab' (SHT_STRTAB)
+    Size   : 112 bytes
+
+

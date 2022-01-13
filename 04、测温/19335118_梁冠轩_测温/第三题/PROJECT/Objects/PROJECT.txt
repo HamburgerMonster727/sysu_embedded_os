@@ -1,0 +1,394 @@
+
+========================================================================
+
+** ELF Header Information
+
+    File Name: C:\Users\²ËÐìöï\Desktop\03¡¢²â¾à\²Î¿¼Ô´Âë\2¡¢F103»ã±à³ÌÐò(³¬Éù)(timer-4digit)\PROJECT\Objects\PROJECT.axf
+
+    Machine class: ELFCLASS32 (32-bit)
+    Data encoding: ELFDATA2LSB (Little endian)
+    Header version: EV_CURRENT (Current version)
+    Operating System ABI: none
+    ABI Version: 0
+    File Type: ET_EXEC (Executable) (2)
+    Machine: EM_ARM (ARM)
+
+    Image Entry point: 0x08000009
+    Flags: EF_ARM_HASENTRY (0x00000002)
+
+    ARM ELF revision: 0 (SDT / legacy GNU / unspecified)
+
+    Built with
+    Component: ARM Compiler 5.06 update 6 (build 750) Tool: armasm [4d35ec]
+    Component: ARM Compiler 5.06 update 6 (build 750) Tool: armlink [4d35ed]
+
+    Header size: 52 bytes (0x34)
+    Program header entry size: 32 bytes (0x20)
+    Section header entry size: 40 bytes (0x28)
+
+    Program header entries: 1
+    Section header entries: 10
+
+    Program header offset: 2608 (0x00000a30)
+    Section header offset: 2640 (0x00000a50)
+
+    Section header string table index: 9
+
+========================================================================
+
+** Program header #0 (PT_LOAD) [PF_X + PF_R + PF_ARM_ENTRY]
+    Size : 844 bytes
+    Virtual address: 0x08000000 (Alignment 4)
+
+
+========================================================================
+
+** Section #1 'ER_IROM1' (SHT_PROGBITS) [SHF_ALLOC + SHF_EXECINSTR]
+    Size   : 844 bytes (alignment 4)
+    Address: 0x08000000
+
+    $d
+    RESET
+        0x08000000:    20002000    . .     DCD    536879104
+        0x08000004:    08000009    ....    DCD    134217737
+    $t
+    START
+        0x08000008:    f000f953    ..S.    BL       0x80002b2 ; START + 682
+        0x0800000c:    f000f937    ..7.    BL       0x800027e ; START + 630
+        0x08000010:    f000f8aa    ....    BL       0x8000168 ; START + 352
+        0x08000014:    f000f8fb    ....    BL       0x800020e ; START + 518
+        0x08000018:    f04f0001    O...    MOV      r0,#1
+        0x0800001c:    49bd        .I      LDR      r1,[pc,#756] ; [0x8000314] = 0x40012408
+        0x0800001e:    6008        .`      STR      r0,[r1,#0]
+        0x08000020:    49bd        .I      LDR      r1,[pc,#756] ; [0x8000318] = 0x40012400
+        0x08000022:    6808        .h      LDR      r0,[r1,#0]
+        0x08000024:    f0100f02    ....    TST      r0,#2
+        0x08000028:    d0fb        ..      BEQ      0x8000022 ; START + 26
+        0x0800002a:    49bc        .I      LDR      r1,[pc,#752] ; [0x800031c] = 0x4001244c
+        0x0800002c:    6808        .h      LDR      r0,[r1,#0]
+        0x0800002e:    f240519a    @..Q    MOV      r1,#0x59a
+        0x08000032:    4288        .B      CMP      r0,r1
+        0x08000034:    bfbc        ..      ITT      LT
+        0x08000036:    2000        .       MOVLT    r0,#0
+        0x08000038:    e071        q.      BLT      0x800011e ; START + 278
+        0x0800003a:    f240519e    @..Q    MOV      r1,#0x59e
+        0x0800003e:    4288        .B      CMP      r0,r1
+        0x08000040:    bfbc        ..      ITT      LT
+        0x08000042:    2001        .       MOVLT    r0,#1
+        0x08000044:    e06b        k.      BLT      0x800011e ; START + 278
+        0x08000046:    f24051af    @..Q    MOV      r1,#0x5af
+        0x0800004a:    4288        .B      CMP      r0,r1
+        0x0800004c:    bfbc        ..      ITT      LT
+        0x0800004e:    2002        .       MOVLT    r0,#2
+        0x08000050:    e065        e.      BLT      0x800011e ; START + 278
+        0x08000052:    f24051ca    @..Q    MOV      r1,#0x5ca
+        0x08000056:    4288        .B      CMP      r0,r1
+        0x08000058:    bfbc        ..      ITT      LT
+        0x0800005a:    2003        .       MOVLT    r0,#3
+        0x0800005c:    e05f        _.      BLT      0x800011e ; START + 278
+        0x0800005e:    f24051ee    @..Q    MOV      r1,#0x5ee
+        0x08000062:    4288        .B      CMP      r0,r1
+        0x08000064:    bfbc        ..      ITT      LT
+        0x08000066:    2004        .       MOVLT    r0,#4
+        0x08000068:    e059        Y.      BLT      0x800011e ; START + 278
+        0x0800006a:    f2406117    @..a    MOV      r1,#0x617
+        0x0800006e:    4288        .B      CMP      r0,r1
+        0x08000070:    bfbc        ..      ITT      LT
+        0x08000072:    2005        .       MOVLT    r0,#5
+        0x08000074:    e053        S.      BLT      0x800011e ; START + 278
+        0x08000076:    f2406144    @.Da    MOV      r1,#0x644
+        0x0800007a:    4288        .B      CMP      r0,r1
+        0x0800007c:    bfbc        ..      ITT      LT
+        0x0800007e:    2006        .       MOVLT    r0,#6
+        0x08000080:    e04d        M.      BLT      0x800011e ; START + 278
+        0x08000082:    f2406174    @.ta    MOV      r1,#0x674
+        0x08000086:    4288        .B      CMP      r0,r1
+        0x08000088:    bfbc        ..      ITT      LT
+        0x0800008a:    2007        .       MOVLT    r0,#7
+        0x0800008c:    e047        G.      BLT      0x800011e ; START + 278
+        0x0800008e:    f24061a7    @..a    MOV      r1,#0x6a7
+        0x08000092:    4288        .B      CMP      r0,r1
+        0x08000094:    bfbc        ..      ITT      LT
+        0x08000096:    2008        .       MOVLT    r0,#8
+        0x08000098:    e041        A.      BLT      0x800011e ; START + 278
+        0x0800009a:    f24061da    @..a    MOV      r1,#0x6da
+        0x0800009e:    4288        .B      CMP      r0,r1
+        0x080000a0:    bfbc        ..      ITT      LT
+        0x080000a2:    2009        .       MOVLT    r0,#9
+        0x080000a4:    e03b        ;.      BLT      0x800011e ; START + 278
+        0x080000a6:    f240710d    @..q    MOV      r1,#0x70d
+        0x080000aa:    4288        .B      CMP      r0,r1
+        0x080000ac:    bfbc        ..      ITT      LT
+        0x080000ae:    2000        .       MOVLT    r0,#0
+        0x080000b0:    e03e        >.      BLT      0x8000130 ; START + 296
+        0x080000b2:    f44f61e8    O..a    MOV      r1,#0x740
+        0x080000b6:    4288        .B      CMP      r0,r1
+        0x080000b8:    bfbc        ..      ITT      LT
+        0x080000ba:    2001        .       MOVLT    r0,#1
+        0x080000bc:    e038        8.      BLT      0x8000130 ; START + 296
+        0x080000be:    f2407172    @.rq    MOV      r1,#0x772
+        0x080000c2:    4288        .B      CMP      r0,r1
+        0x080000c4:    bfbc        ..      ITT      LT
+        0x080000c6:    2002        .       MOVLT    r0,#2
+        0x080000c8:    e032        2.      BLT      0x8000130 ; START + 296
+        0x080000ca:    f24071a3    @..q    MOV      r1,#0x7a3
+        0x080000ce:    4288        .B      CMP      r0,r1
+        0x080000d0:    bfbc        ..      ITT      LT
+        0x080000d2:    2003        .       MOVLT    r0,#3
+        0x080000d4:    e02c        ,.      BLT      0x8000130 ; START + 296
+        0x080000d6:    f24071d2    @..q    MOV      r1,#0x7d2
+        0x080000da:    4288        .B      CMP      r0,r1
+        0x080000dc:    bfbc        ..      ITT      LT
+        0x080000de:    2004        .       MOVLT    r0,#4
+        0x080000e0:    e026        &.      BLT      0x8000130 ; START + 296
+        0x080000e2:    f44f6100    O..a    MOV      r1,#0x800
+        0x080000e6:    4288        .B      CMP      r0,r1
+        0x080000e8:    bfbc        ..      ITT      LT
+        0x080000ea:    2005        .       MOVLT    r0,#5
+        0x080000ec:    e020         .      BLT      0x8000130 ; START + 296
+        0x080000ee:    f640012c    @.,.    MOV      r1,#0x82c
+        0x080000f2:    4288        .B      CMP      r0,r1
+        0x080000f4:    bfbc        ..      ITT      LT
+        0x080000f6:    2006        .       MOVLT    r0,#6
+        0x080000f8:    e01a        ..      BLT      0x8000130 ; START + 296
+        0x080000fa:    f6400157    @.W.    MOV      r1,#0x857
+        0x080000fe:    4288        .B      CMP      r0,r1
+        0x08000100:    bfbc        ..      ITT      LT
+        0x08000102:    2007        .       MOVLT    r0,#7
+        0x08000104:    e014        ..      BLT      0x8000130 ; START + 296
+        0x08000106:    f6400181    @...    MOV      r1,#0x881
+        0x0800010a:    4288        .B      CMP      r0,r1
+        0x0800010c:    bfbc        ..      ITT      LT
+        0x0800010e:    2008        .       MOVLT    r0,#8
+        0x08000110:    e00e        ..      BLT      0x8000130 ; START + 296
+        0x08000112:    f64001a9    @...    MOV      r1,#0x8a9
+        0x08000116:    4288        .B      CMP      r0,r1
+        0x08000118:    bfbc        ..      ITT      LT
+        0x0800011a:    2009        .       MOVLT    r0,#9
+        0x0800011c:    e008        ..      BLT      0x8000130 ; START + 296
+        0x0800011e:    4980        .I      LDR      r1,[pc,#512] ; [0x8000320] = 0x4001080c
+        0x08000120:    f44f730c    O..s    MOV      r3,#0x230
+        0x08000124:    f1030201    ....    ADD      r2,r3,#1
+        0x08000128:    600a        .`      STR      r2,[r1,#0]
+        0x0800012a:    f000f88c    ....    BL       0x8000246 ; START + 574
+        0x0800012e:    e008        ..      B        0x8000142 ; START + 314
+        0x08000130:    497b        {I      LDR      r1,[pc,#492] ; [0x8000320] = 0x4001080c
+        0x08000132:    f44f730c    O..s    MOV      r3,#0x230
+        0x08000136:    f1030202    ....    ADD      r2,r3,#2
+        0x0800013a:    600a        .`      STR      r2,[r1,#0]
+        0x0800013c:    f000f883    ....    BL       0x8000246 ; START + 574
+        0x08000140:    e7ff        ..      B        0x8000142 ; START + 314
+        0x08000142:    4977        wI      LDR      r1,[pc,#476] ; [0x8000320] = 0x4001080c
+        0x08000144:    f44f730c    O..s    MOV      r3,#0x230
+        0x08000148:    eb030200    ....    ADD      r2,r3,r0
+        0x0800014c:    600a        .`      STR      r2,[r1,#0]
+        0x0800014e:    f000f87a    ..z.    BL       0x8000246 ; START + 574
+        0x08000152:    f2402203    @.."    MOV      r2,#0x203
+        0x08000156:    600a        .`      STR      r2,[r1,#0]
+        0x08000158:    f000f875    ..u.    BL       0x8000246 ; START + 574
+        0x0800015c:    f04f02c0    O...    MOV      r2,#0xc0
+        0x08000160:    600a        .`      STR      r2,[r1,#0]
+        0x08000162:    f000f870    ..p.    BL       0x8000246 ; START + 574
+        0x08000166:    e7fe        ..      B        0x8000166 ; START + 350
+        0x08000168:    b50f        ..      PUSH     {r0-r3,lr}
+        0x0800016a:    496d        mI      LDR      r1,[pc,#436] ; [0x8000320] = 0x4001080c
+        0x0800016c:    f04f0058    O.X.    MOV      r0,#0x58
+        0x08000170:    6008        .`      STR      r0,[r1,#0]
+        0x08000172:    f000f868    ..h.    BL       0x8000246 ; START + 574
+        0x08000176:    f44f7204    O..r    MOV      r2,#0x210
+        0x0800017a:    600a        .`      STR      r2,[r1,#0]
+        0x0800017c:    f000f863    ..c.    BL       0x8000246 ; START + 574
+        0x08000180:    f1000001    ....    ADD      r0,r0,#1
+        0x08000184:    6008        .`      STR      r0,[r1,#0]
+        0x08000186:    f000f85e    ..^.    BL       0x8000246 ; START + 574
+        0x0800018a:    f2402206    @.."    MOV      r2,#0x206
+        0x0800018e:    600a        .`      STR      r2,[r1,#0]
+        0x08000190:    f000f859    ..Y.    BL       0x8000246 ; START + 574
+        0x08000194:    f1000001    ....    ADD      r0,r0,#1
+        0x08000198:    6008        .`      STR      r0,[r1,#0]
+        0x0800019a:    f000f854    ..T.    BL       0x8000246 ; START + 574
+        0x0800019e:    f2402209    @.."    MOV      r2,#0x209
+        0x080001a2:    600a        .`      STR      r2,[r1,#0]
+        0x080001a4:    f000f84f    ..O.    BL       0x8000246 ; START + 574
+        0x080001a8:    f1000001    ....    ADD      r0,r0,#1
+        0x080001ac:    6008        .`      STR      r0,[r1,#0]
+        0x080001ae:    f000f84a    ..J.    BL       0x8000246 ; START + 574
+        0x080001b2:    f44f7202    O..r    MOV      r2,#0x208
+        0x080001b6:    600a        .`      STR      r2,[r1,#0]
+        0x080001b8:    f000f845    ..E.    BL       0x8000246 ; START + 574
+        0x080001bc:    f1000001    ....    ADD      r0,r0,#1
+        0x080001c0:    6008        .`      STR      r0,[r1,#0]
+        0x080001c2:    f000f840    ..@.    BL       0x8000246 ; START + 574
+        0x080001c6:    f44f7202    O..r    MOV      r2,#0x208
+        0x080001ca:    600a        .`      STR      r2,[r1,#0]
+        0x080001cc:    f000f83b    ..;.    BL       0x8000246 ; START + 574
+        0x080001d0:    f1000001    ....    ADD      r0,r0,#1
+        0x080001d4:    6008        .`      STR      r0,[r1,#0]
+        0x080001d6:    f000f836    ..6.    BL       0x8000246 ; START + 574
+        0x080001da:    f2402209    @.."    MOV      r2,#0x209
+        0x080001de:    600a        .`      STR      r2,[r1,#0]
+        0x080001e0:    f000f831    ..1.    BL       0x8000246 ; START + 574
+        0x080001e4:    f1000001    ....    ADD      r0,r0,#1
+        0x080001e8:    6008        .`      STR      r0,[r1,#0]
+        0x080001ea:    f000f82c    ..,.    BL       0x8000246 ; START + 574
+        0x080001ee:    f2402206    @.."    MOV      r2,#0x206
+        0x080001f2:    600a        .`      STR      r2,[r1,#0]
+        0x080001f4:    f000f827    ..'.    BL       0x8000246 ; START + 574
+        0x080001f8:    f1000001    ....    ADD      r0,r0,#1
+        0x080001fc:    6008        .`      STR      r0,[r1,#0]
+        0x080001fe:    f000f822    ..".    BL       0x8000246 ; START + 574
+        0x08000202:    f44f7200    O..r    MOV      r2,#0x200
+        0x08000206:    600a        .`      STR      r2,[r1,#0]
+        0x08000208:    f000f81d    ....    BL       0x8000246 ; START + 574
+        0x0800020c:    bd0f        ..      POP      {r0-r3,pc}
+        0x0800020e:    b503        ..      PUSH     {r0,r1,lr}
+        0x08000210:    4943        CI      LDR      r1,[pc,#268] ; [0x8000320] = 0x4001080c
+        0x08000212:    f04f0038    O.8.    MOV      r0,#0x38
+        0x08000216:    6008        .`      STR      r0,[r1,#0]
+        0x08000218:    f000f815    ....    BL       0x8000246 ; START + 574
+        0x0800021c:    f04f000c    O...    MOV      r0,#0xc
+        0x08000220:    6008        .`      STR      r0,[r1,#0]
+        0x08000222:    f000f810    ....    BL       0x8000246 ; START + 574
+        0x08000226:    f04f0006    O...    MOV      r0,#6
+        0x0800022a:    6008        .`      STR      r0,[r1,#0]
+        0x0800022c:    f000f80b    ....    BL       0x8000246 ; START + 574
+        0x08000230:    f04f0001    O...    MOV      r0,#1
+        0x08000234:    6008        .`      STR      r0,[r1,#0]
+        0x08000236:    f000f806    ....    BL       0x8000246 ; START + 574
+        0x0800023a:    f04f0002    O...    MOV      r0,#2
+        0x0800023e:    6008        .`      STR      r0,[r1,#0]
+        0x08000240:    f000f801    ....    BL       0x8000246 ; START + 574
+        0x08000244:    bd03        ..      POP      {r0,r1,pc}
+        0x08000246:    b503        ..      PUSH     {r0,r1,lr}
+        0x08000248:    4936        6I      LDR      r1,[pc,#216] ; [0x8000324] = 0x40010810
+        0x0800024a:    f44f6080    O..`    MOV      r0,#0x400
+        0x0800024e:    6008        .`      STR      r0,[r1,#0]
+        0x08000250:    f04f6080    O..`    MOV      r0,#0x4000000
+        0x08000254:    6008        .`      STR      r0,[r1,#0]
+        0x08000256:    f000f801    ....    BL       0x800025c ; START + 596
+        0x0800025a:    bd03        ..      POP      {r0,r1,pc}
+        0x0800025c:    b507        ..      PUSH     {r0-r2,lr}
+        0x0800025e:    2000        .       MOVS     r0,#0
+        0x08000260:    2100        .!      MOVS     r1,#0
+        0x08000262:    2200        ."      MOVS     r2,#0
+        0x08000264:    3001        .0      ADDS     r0,#1
+        0x08000266:    2821        !(      CMP      r0,#0x21
+        0x08000268:    d3fc        ..      BCC      0x8000264 ; START + 604
+        0x0800026a:    2000        .       MOVS     r0,#0
+        0x0800026c:    3101        .1      ADDS     r1,#1
+        0x0800026e:    2921        !)      CMP      r1,#0x21
+        0x08000270:    d3f8        ..      BCC      0x8000264 ; START + 604
+        0x08000272:    2000        .       MOVS     r0,#0
+        0x08000274:    2100        .!      MOVS     r1,#0
+        0x08000276:    3201        .2      ADDS     r2,#1
+        0x08000278:    2a1e        .*      CMP      r2,#0x1e
+        0x0800027a:    d3f3        ..      BCC      0x8000264 ; START + 604
+        0x0800027c:    bd07        ..      POP      {r0-r2,pc}
+        0x0800027e:    b503        ..      PUSH     {r0,r1,lr}
+        0x08000280:    4929        )I      LDR      r1,[pc,#164] ; [0x8000328] = 0x40021018
+        0x08000282:    f240200d    @..     MOV      r0,#0x20d
+        0x08000286:    6008        .`      STR      r0,[r1,#0]
+        0x08000288:    f04f3033    O.30    MOV      r0,#0x33333333
+        0x0800028c:    4927        'I      LDR      r1,[pc,#156] ; [0x800032c] = 0x40010800
+        0x0800028e:    6008        .`      STR      r0,[r1,#0]
+        0x08000290:    f2403033    @.30    MOV      r0,#0x333
+        0x08000294:    4926        &I      LDR      r1,[pc,#152] ; [0x8000330] = 0x40010804
+        0x08000296:    6008        .`      STR      r0,[r1,#0]
+        0x08000298:    f04f0000    O...    MOV      r0,#0
+        0x0800029c:    4925        %I      LDR      r1,[pc,#148] ; [0x8000334] = 0x40010c00
+        0x0800029e:    6008        .`      STR      r0,[r1,#0]
+        0x080002a0:    f04f0008    O...    MOV      r0,#8
+        0x080002a4:    4924        $I      LDR      r1,[pc,#144] ; [0x8000338] = 0x40012434
+        0x080002a6:    6008        .`      STR      r0,[r1,#0]
+        0x080002a8:    f04f0001    O...    MOV      r0,#1
+        0x080002ac:    4919        .I      LDR      r1,[pc,#100] ; [0x8000314] = 0x40012408
+        0x080002ae:    6008        .`      STR      r0,[r1,#0]
+        0x080002b0:    bd03        ..      POP      {r0,r1,pc}
+        0x080002b2:    4922        "I      LDR      r1,[pc,#136] ; [0x800033c] = 0x40021000
+        0x080002b4:    6808        .h      LDR      r0,[r1,#0]
+        0x080002b6:    f44f3280    O..2    MOV      r2,#0x10000
+        0x080002ba:    ea400002    @...    ORR      r0,r0,r2
+        0x080002be:    6008        .`      STR      r0,[r1,#0]
+        0x080002c0:    f44f3200    O..2    MOV      r2,#0x20000
+        0x080002c4:    6808        .h      LDR      r0,[r1,#0]
+        0x080002c6:    4010        .@      ANDS     r0,r0,r2
+        0x080002c8:    2800        .(      CMP      r0,#0
+        0x080002ca:    d0f9        ..      BEQ      0x80002c0 ; START + 696
+        0x080002cc:    491c        .I      LDR      r1,[pc,#112] ; [0x8000340] = 0x40022000
+        0x080002ce:    f04f0012    O...    MOV      r0,#0x12
+        0x080002d2:    6008        .`      STR      r0,[r1,#0]
+        0x080002d4:    491b        .I      LDR      r1,[pc,#108] ; [0x8000344] = 0x40021004
+        0x080002d6:    6808        .h      LDR      r0,[r1,#0]
+        0x080002d8:    4a1b        .J      LDR      r2,[pc,#108] ; [0x8000348] = 0x1d0400
+        0x080002da:    ea400002    @...    ORR      r0,r0,r2
+        0x080002de:    6008        .`      STR      r0,[r1,#0]
+        0x080002e0:    4916        .I      LDR      r1,[pc,#88] ; [0x800033c] = 0x40021000
+        0x080002e2:    6808        .h      LDR      r0,[r1,#0]
+        0x080002e4:    f04f7280    O..r    MOV      r2,#0x1000000
+        0x080002e8:    ea400002    @...    ORR      r0,r0,r2
+        0x080002ec:    6008        .`      STR      r0,[r1,#0]
+        0x080002ee:    f04f7200    O..r    MOV      r2,#0x2000000
+        0x080002f2:    6808        .h      LDR      r0,[r1,#0]
+        0x080002f4:    4010        .@      ANDS     r0,r0,r2
+        0x080002f6:    2800        .(      CMP      r0,#0
+        0x080002f8:    d0f9        ..      BEQ      0x80002ee ; START + 742
+        0x080002fa:    4912        .I      LDR      r1,[pc,#72] ; [0x8000344] = 0x40021004
+        0x080002fc:    6808        .h      LDR      r0,[r1,#0]
+        0x080002fe:    f24c0202    L...    MOV      r2,#0xc002
+        0x08000302:    ea400002    @...    ORR      r0,r0,r2
+        0x08000306:    6008        .`      STR      r0,[r1,#0]
+        0x08000308:    6808        .h      LDR      r0,[r1,#0]
+        0x0800030a:    f0100008    ....    ANDS     r0,r0,#8
+        0x0800030e:    2808        .(      CMP      r0,#8
+        0x08000310:    d1fa        ..      BNE      0x8000308 ; START + 768
+        0x08000312:    4770        pG      BX       lr
+    $d
+        0x08000314:    40012408    .$.@    DCD    1073816584
+        0x08000318:    40012400    .$.@    DCD    1073816576
+        0x0800031c:    4001244c    L$.@    DCD    1073816652
+        0x08000320:    4001080c    ...@    DCD    1073809420
+        0x08000324:    40010810    ...@    DCD    1073809424
+        0x08000328:    40021018    ...@    DCD    1073877016
+        0x0800032c:    40010800    ...@    DCD    1073809408
+        0x08000330:    40010804    ...@    DCD    1073809412
+        0x08000334:    40010c00    ...@    DCD    1073810432
+        0x08000338:    40012434    4$.@    DCD    1073816628
+        0x0800033c:    40021000    ...@    DCD    1073876992
+        0x08000340:    40022000    . .@    DCD    1073881088
+        0x08000344:    40021004    ...@    DCD    1073876996
+        0x08000348:    001d0400    ....    DCD    1901568
+
+** Section #2 '.debug_abbrev' (SHT_PROGBITS)
+    Size   : 32 bytes
+
+
+** Section #3 '.debug_info' (SHT_PROGBITS)
+    Size   : 216 bytes
+
+
+** Section #4 '.debug_line' (SHT_PROGBITS)
+    Size   : 376 bytes
+
+
+** Section #5 '.symtab' (SHT_SYMTAB)
+    Size   : 128 bytes (alignment 4)
+    String table #6 '.strtab'
+    Last local symbol no. 6
+
+
+** Section #6 '.strtab' (SHT_STRTAB)
+    Size   : 192 bytes
+
+
+** Section #7 '.note' (SHT_NOTE)
+    Size   : 20 bytes (alignment 4)
+
+
+** Section #8 '.comment' (SHT_PROGBITS)
+    Size   : 648 bytes
+
+
+** Section #9 '.shstrtab' (SHT_STRTAB)
+    Size   : 100 bytes
+
+

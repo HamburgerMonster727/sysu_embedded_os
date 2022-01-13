@@ -1,0 +1,223 @@
+
+========================================================================
+
+** ELF Header Information
+
+    File Name: D:\资料\嵌入式操作系统\01、跑马灯\参考源码\跑马灯\PROJECT\Objects\PROJECT.axf
+
+    Machine class: ELFCLASS32 (32-bit)
+    Data encoding: ELFDATA2LSB (Little endian)
+    Header version: EV_CURRENT (Current version)
+    Operating System ABI: none
+    ABI Version: 0
+    File Type: ET_EXEC (Executable) (2)
+    Machine: EM_ARM (ARM)
+
+    Image Entry point: 0x08000009
+    Flags: EF_ARM_HASENTRY (0x00000002)
+
+    ARM ELF revision: 0 (SDT / legacy GNU / unspecified)
+
+    Built with
+    Component: ARM Compiler 5.06 update 6 (build 750) Tool: armasm [4d35ec]
+    Component: ARM Compiler 5.06 update 6 (build 750) Tool: armlink [4d35ed]
+
+    Header size: 52 bytes (0x34)
+    Program header entry size: 32 bytes (0x20)
+    Section header entry size: 40 bytes (0x28)
+
+    Program header entries: 1
+    Section header entries: 12
+
+    Program header offset: 2376 (0x00000948)
+    Section header offset: 2408 (0x00000968)
+
+    Section header string table index: 11
+
+========================================================================
+
+** Program header #0 (PT_LOAD) [PF_X + PF_W + PF_R + PF_ARM_ENTRY]
+    Size : 336 bytes
+    Virtual address: 0x08000000 (Alignment 4)
+
+
+========================================================================
+
+** Section #1 'ER_IROM1' (SHT_PROGBITS) [SHF_ALLOC + SHF_EXECINSTR]
+    Size   : 328 bytes (alignment 4)
+    Address: 0x08000000
+
+    $d
+    RESET
+        0x08000000:    20002000    . .     DCD    536879104
+        0x08000004:    08000009    ....    DCD    134217737
+    $t
+    START
+        0x08000008:    f000f834    ..4.    BL       InitRamArea ; 0x8000074
+        0x0800000c:    493e        >I      LDR      r1,[pc,#248] ; [0x8000108] = 0x40021018
+        0x0800000e:    6808        .h      LDR      r0,[r1,#0]
+        0x08000010:    f04f0204    O...    MOV      r2,#4
+        0x08000014:    ea400002    @...    ORR      r0,r0,r2
+        0x08000018:    6008        .`      STR      r0,[r1,#0]
+        0x0800001a:    493c        <I      LDR      r1,[pc,#240] ; [0x800010c] = 0x4002101c
+        0x0800001c:    6808        .h      LDR      r0,[r1,#0]
+        0x0800001e:    f04f0201    O...    MOV      r2,#1
+        0x08000022:    ea400002    @...    ORR      r0,r0,r2
+        0x08000026:    6008        .`      STR      r0,[r1,#0]
+        0x08000028:    f04f3033    O.30    MOV      r0,#0x33333333
+        0x0800002c:    4938        8I      LDR      r1,[pc,#224] ; [0x8000110] = 0x40010800
+        0x0800002e:    6008        .`      STR      r0,[r1,#0]
+        0x08000030:    f2433033    C.30    MOV      r0,#0x3333
+        0x08000034:    4937        7I      LDR      r1,[pc,#220] ; [0x8000114] = 0x40010804
+        0x08000036:    6008        .`      STR      r0,[r1,#0]
+        0x08000038:    f24030e7    @..0    MOV      r0,#0x3e7
+        0x0800003c:    4936        6I      LDR      r1,[pc,#216] ; [0x8000118] = 0x4000002c
+        0x0800003e:    6008        .`      STR      r0,[r1,#0]
+        0x08000040:    f641401f    A..@    MOV      r0,#0x1c1f
+        0x08000044:    4935        5I      LDR      r1,[pc,#212] ; [0x800011c] = 0x40000028
+        0x08000046:    6008        .`      STR      r0,[r1,#0]
+        0x08000048:    f04f0001    O...    MOV      r0,#1
+        0x0800004c:    f04f4180    O..A    MOV      r1,#0x40000000
+        0x08000050:    6008        .`      STR      r0,[r1,#0]
+        0x08000052:    f000f803    ....    BL       Delay ; 0x800005c
+        0x08000056:    f000f830    ..0.    BL       AddTimer ; 0x80000ba
+        0x0800005a:    e7fa        ..      B        0x8000052 ; START + 74
+    Delay
+        0x0800005c:    b507        ..      PUSH     {r0-r2,lr}
+        0x0800005e:    4930        0I      LDR      r1,[pc,#192] ; [0x8000120] = 0x40000010
+        0x08000060:    f000f815    ....    BL       ShowDigits ; 0x800008e
+        0x08000064:    680a        .h      LDR      r2,[r1,#0]
+        0x08000066:    f0120f01    ....    TST      r2,#1
+        0x0800006a:    d0f9        ..      BEQ      0x8000060 ; Delay + 4
+        0x0800006c:    f04f0200    O...    MOV      r2,#0
+        0x08000070:    600a        .`      STR      r2,[r1,#0]
+        0x08000072:    bd07        ..      POP      {r0-r2,pc}
+    InitRamArea
+        0x08000074:    b560        `.      PUSH     {r5,r6,lr}
+        0x08000076:    4d2b        +M      LDR      r5,[pc,#172] ; [0x8000124] = 0x20000004
+        0x08000078:    f04f0600    O...    MOV      r6,#0
+        0x0800007c:    702e        .p      STRB     r6,[r5,#0]
+        0x0800007e:    4d2a        *M      LDR      r5,[pc,#168] ; [0x8000128] = 0x20000000
+        0x08000080:    f04f0600    O...    MOV      r6,#0
+        0x08000084:    70ee        .p      STRB     r6,[r5,#3]
+        0x08000086:    70ae        .p      STRB     r6,[r5,#2]
+        0x08000088:    706e        np      STRB     r6,[r5,#1]
+        0x0800008a:    702e        .p      STRB     r6,[r5,#0]
+        0x0800008c:    bd60        `.      POP      {r5,r6,pc}
+    ShowDigits
+        0x0800008e:    b5f0        ..      PUSH     {r4-r7,lr}
+        0x08000090:    4d24        $M      LDR      r5,[pc,#144] ; [0x8000124] = 0x20000004
+        0x08000092:    782e        .x      LDRB     r6,[r5,#0]
+        0x08000094:    f1060601    ....    ADD      r6,r6,#1
+        0x08000098:    2e04        ..      CMP      r6,#4
+        0x0800009a:    d101        ..      BNE      0x80000a0 ; ShowDigits + 18
+        0x0800009c:    f04f0600    O...    MOV      r6,#0
+        0x080000a0:    702e        .p      STRB     r6,[r5,#0]
+        0x080000a2:    4d21        !M      LDR      r5,[pc,#132] ; [0x8000128] = 0x20000000
+        0x080000a4:    5d77        w]      LDRB     r7,[r6,r5]
+        0x080000a6:    4d21        !M      LDR      r5,[pc,#132] ; [0x800012c] = 0x8000138
+        0x080000a8:    5def        .]      LDRB     r7,[r5,r7]
+        0x080000aa:    4d21        !M      LDR      r5,[pc,#132] ; [0x8000130] = 0x8000144
+        0x080000ac:    5dac        .]      LDRB     r4,[r5,r6]
+        0x080000ae:    ea4f2404    O..$    LSL      r4,r4,#8
+        0x080000b2:    4427        'D      ADD      r7,r7,r4
+        0x080000b4:    4d1f        .M      LDR      r5,[pc,#124] ; [0x8000134] = 0x4001080c
+        0x080000b6:    602f        /`      STR      r7,[r5,#0]
+        0x080000b8:    bdf0        ..      POP      {r4-r7,pc}
+    AddTimer
+        0x080000ba:    b522        ".      PUSH     {r1,r5,lr}
+        0x080000bc:    4d1a        .M      LDR      r5,[pc,#104] ; [0x8000128] = 0x20000000
+        0x080000be:    7829        )x      LDRB     r1,[r5,#0]
+        0x080000c0:    f1010101    ....    ADD      r1,r1,#1
+        0x080000c4:    7029        )p      STRB     r1,[r5,#0]
+        0x080000c6:    290a        .)      CMP      r1,#0xa
+        0x080000c8:    d11d        ..      BNE      0x8000106 ; AddTimer + 76
+        0x080000ca:    f04f0100    O...    MOV      r1,#0
+        0x080000ce:    7029        )p      STRB     r1,[r5,#0]
+        0x080000d0:    7869        ix      LDRB     r1,[r5,#1]
+        0x080000d2:    f1010101    ....    ADD      r1,r1,#1
+        0x080000d6:    7069        ip      STRB     r1,[r5,#1]
+        0x080000d8:    2906        .)      CMP      r1,#6
+        0x080000da:    d114        ..      BNE      0x8000106 ; AddTimer + 76
+        0x080000dc:    f04f0100    O...    MOV      r1,#0
+        0x080000e0:    7069        ip      STRB     r1,[r5,#1]
+        0x080000e2:    78a9        .x      LDRB     r1,[r5,#2]
+        0x080000e4:    f1010101    ....    ADD      r1,r1,#1
+        0x080000e8:    70a9        .p      STRB     r1,[r5,#2]
+        0x080000ea:    290a        .)      CMP      r1,#0xa
+        0x080000ec:    d10b        ..      BNE      0x8000106 ; AddTimer + 76
+        0x080000ee:    f04f0100    O...    MOV      r1,#0
+        0x080000f2:    70a9        .p      STRB     r1,[r5,#2]
+        0x080000f4:    78e9        .x      LDRB     r1,[r5,#3]
+        0x080000f6:    f1010101    ....    ADD      r1,r1,#1
+        0x080000fa:    70e9        .p      STRB     r1,[r5,#3]
+        0x080000fc:    2906        .)      CMP      r1,#6
+        0x080000fe:    d102        ..      BNE      0x8000106 ; AddTimer + 76
+        0x08000100:    f04f0100    O...    MOV      r1,#0
+        0x08000104:    70e9        .p      STRB     r1,[r5,#3]
+        0x08000106:    bd22        ".      POP      {r1,r5,pc}
+    $d
+        0x08000108:    40021018    ...@    DCD    1073877016
+        0x0800010c:    4002101c    ...@    DCD    1073877020
+        0x08000110:    40010800    ...@    DCD    1073809408
+        0x08000114:    40010804    ...@    DCD    1073809412
+        0x08000118:    4000002c    ,..@    DCD    1073741868
+        0x0800011c:    40000028    (..@    DCD    1073741864
+        0x08000120:    40000010    ...@    DCD    1073741840
+        0x08000124:    20000004    ...     DCD    536870916
+        0x08000128:    20000000    ...     DCD    536870912
+        0x0800012c:    08000138    8...    DCD    134218040
+        0x08000130:    08000144    D...    DCD    134218052
+        0x08000134:    4001080c    ...@    DCD    1073809420
+    $d.realdata
+    MYDATA
+    CODES
+        0x08000138:    4f5b063f    ?.[O    DCD    1331365439
+        0x0800013c:    077d6d66    fm}.    DCD    125660518
+        0x08000140:    00006f7f    .o..    DCD    28543
+    DIGITPOS
+        0x08000144:    0e0d0b07    ....    DCD    235735815
+
+** Section #2 'RW_IRAM1' (SHT_PROGBITS) [SHF_ALLOC + SHF_WRITE]
+    Size   : 8 bytes (alignment 4)
+    Address: 0x20000000
+
+
+** Section #3 '.debug_abbrev' (SHT_PROGBITS)
+    Size   : 32 bytes
+
+
+** Section #4 '.debug_frame' (SHT_PROGBITS)
+    Size   : 116 bytes
+
+
+** Section #5 '.debug_info' (SHT_PROGBITS)
+    Size   : 264 bytes
+
+
+** Section #6 '.debug_line' (SHT_PROGBITS)
+    Size   : 184 bytes
+
+
+** Section #7 '.symtab' (SHT_SYMTAB)
+    Size   : 320 bytes (alignment 4)
+    String table #8 '.strtab'
+    Last local symbol no. 18
+
+
+** Section #8 '.strtab' (SHT_STRTAB)
+    Size   : 288 bytes
+
+
+** Section #9 '.note' (SHT_NOTE)
+    Size   : 24 bytes (alignment 4)
+
+
+** Section #10 '.comment' (SHT_PROGBITS)
+    Size   : 648 bytes
+
+
+** Section #11 '.shstrtab' (SHT_STRTAB)
+    Size   : 112 bytes
+
+
